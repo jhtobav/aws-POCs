@@ -1,0 +1,143 @@
+# Welcome to Serverless!
+#
+# This file is the main config file for your service.
+# It's very minimal at this point and uses default values.
+# You can always add more config options for more control.
+# We've included some commented out config examples here.
+# Just uncomment any of them to get that config option.
+#
+# For full config options, check the docs:
+#    docs.serverless.com
+#
+# Happy Coding!
+
+service: stepfunctionspoc
+# app and org for use with dashboard.serverless.com
+app: stepfunctionspoc
+org: jhtobav
+
+# You can pin your service to only deploy with a specific Serverless version
+# Check out our docs for more details
+frameworkVersion: '2'
+
+plugins:
+  - serverless-iam-roles-per-function
+  - serverless-step-functions
+
+provider:
+  name: aws
+  runtime: python3.8
+  lambdaHashingVersion: 20201221
+
+functions:
+  inicio:
+    handler: inicio.inicio
+    events:
+      - http:
+          path: inicio
+          method: get
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - states:StartSyncExecution
+        Resource: "arn:aws:states:us-east-1:323413004057:stateMachine:HelloWorldExpressStepFunctionsStateMachine-MAMH67pUjivc"
+
+  seleccionar_numero:
+    handler: seleccionar_numero.seleccionar_numero
+    events:
+      - http:
+          path: seleccionar_numero
+          method: get
+
+  funcion_uno:
+    handler: funcion_uno.funcion_uno
+    events:
+      - http:
+          path: funcion_uno
+          method: get
+
+  funcion_dos:
+    handler: funcion_dos.funcion_dos
+    events:
+      - http:
+          path: funcion_dos
+          method: get
+
+  funcion_tres:
+    handler: funcion_tres.funcion_tres
+    events:
+      - http:
+          path: funcion_tres
+          method: get
+
+stepFunctions:
+  stateMachines:
+    seleccionadorNumeros:
+      type: EXPRESS
+      loggingConfig:
+        level: ALL
+        includeExecutionData: true
+        destinations:
+          - arn:aws:logs:us-east-1:323413004057:log-group:stepFunctionExecutions:*
+      events:
+        - http:
+            path: seleccionarNumero
+            method: post
+      name: seleccionadorNumero
+      definition:
+        Comment: "A simple AWS Step Functions state machine that automates a call center support session."
+        StartAt: "Seleccionar numero"
+        States: 
+          Seleccionar numero:
+            Type: "Task"
+            Resource: "arn:aws:lambda:us-east-1:323413004057:function:stepfunctionspoc-dev-seleccionar_numero"
+            Next: "Funcion Seleccionada"
+          Funcion Seleccionada:
+              Type : "Choice"
+              Choices:
+                - Variable: "$.numero"
+                  NumericEquals: 1
+                  Next: "Funcion Uno"
+                - Variable: "$.numero"
+                  NumericEquals: 2
+                  Next: "Funcion Dos"
+                - Variable: "$.numero"
+                  NumericEquals: 3
+                  Next: "Funcion Tres"
+          Funcion Uno: 
+            Type: "Task"
+            Resource: "arn:aws:lambda:us-east-1:323413004057:function:stepfunctionspoc-dev-funcion_uno"
+            ResultPath: "$.numero"
+            OutputPath: "$.numero"
+            End: true
+          Funcion Dos: 
+            Type: "Task"
+            Resource: "arn:aws:lambda:us-east-1:323413004057:function:stepfunctionspoc-dev-funcion_dos"
+            ResultPath: "$.numero"
+            OutputPath: "$.numero"
+            End: true
+          Funcion Tres: 
+            Type: "Task"
+            Resource: "arn:aws:lambda:us-east-1:323413004057:function:stepfunctionspoc-dev-funcion_tres"
+            ResultPath: "$"
+            OutputPath: "$.data"
+            End: true
+    
+    helloWorldExpress:
+      type: EXPRESS
+      events:
+        - http:
+            path: helloWorldExpress
+            method: get
+      definition:      
+        Comment: "A Hello World example of the Amazon States Language using Pass states"
+        StartAt: "Hello"
+        States:
+          Hello:
+            Type: "Pass"
+            Result: "Hello"
+            Next: "World"
+          World: 
+            Type: "Pass"
+            Result: "World"
+            End: true

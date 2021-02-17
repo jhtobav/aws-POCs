@@ -1,0 +1,2114 @@
+{
+  "service": {
+    "service": "stepfunctionspoc",
+    "serviceObject": {
+      "name": "stepfunctionspoc"
+    },
+    "provider": {
+      "name": "aws",
+      "runtime": "python3.8",
+      "lambdaHashingVersion": "20201221",
+      "stage": "dev",
+      "variableSyntax": "\\${([^{}:]+?(?:\\(|:)(?:[^:{}][^{}]*?)?)}",
+      "region": "us-east-1",
+      "versionFunctions": true,
+      "compiledCloudFormationTemplate": {
+        "AWSTemplateFormatVersion": "2010-09-09",
+        "Description": "The AWS CloudFormation template for this Serverless application",
+        "Resources": {
+          "ServerlessDeploymentBucket": {
+            "Type": "AWS::S3::Bucket",
+            "Properties": {
+              "BucketEncryption": {
+                "ServerSideEncryptionConfiguration": [
+                  {
+                    "ServerSideEncryptionByDefault": {
+                      "SSEAlgorithm": "AES256"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          "ServerlessDeploymentBucketPolicy": {
+            "Type": "AWS::S3::BucketPolicy",
+            "Properties": {
+              "Bucket": {
+                "Ref": "ServerlessDeploymentBucket"
+              },
+              "PolicyDocument": {
+                "Statement": [
+                  {
+                    "Action": "s3:*",
+                    "Effect": "Deny",
+                    "Principal": "*",
+                    "Resource": [
+                      {
+                        "Fn::Join": [
+                          "",
+                          [
+                            "arn:",
+                            {
+                              "Ref": "AWS::Partition"
+                            },
+                            ":s3:::",
+                            {
+                              "Ref": "ServerlessDeploymentBucket"
+                            },
+                            "/*"
+                          ]
+                        ]
+                      },
+                      {
+                        "Fn::Join": [
+                          "",
+                          [
+                            "arn:",
+                            {
+                              "Ref": "AWS::Partition"
+                            },
+                            ":s3:::",
+                            {
+                              "Ref": "ServerlessDeploymentBucket"
+                            }
+                          ]
+                        ]
+                      }
+                    ],
+                    "Condition": {
+                      "Bool": {
+                        "aws:SecureTransport": false
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          "InicioLogGroup": {
+            "Type": "AWS::Logs::LogGroup",
+            "Properties": {
+              "LogGroupName": "/aws/lambda/stepfunctionspoc-dev-inicio"
+            }
+          },
+          "SeleccionarUnderscorenumeroLogGroup": {
+            "Type": "AWS::Logs::LogGroup",
+            "Properties": {
+              "LogGroupName": "/aws/lambda/stepfunctionspoc-dev-seleccionar_numero"
+            }
+          },
+          "FuncionUnderscoreunoLogGroup": {
+            "Type": "AWS::Logs::LogGroup",
+            "Properties": {
+              "LogGroupName": "/aws/lambda/stepfunctionspoc-dev-funcion_uno"
+            }
+          },
+          "FuncionUnderscoredosLogGroup": {
+            "Type": "AWS::Logs::LogGroup",
+            "Properties": {
+              "LogGroupName": "/aws/lambda/stepfunctionspoc-dev-funcion_dos"
+            }
+          },
+          "FuncionUnderscoretresLogGroup": {
+            "Type": "AWS::Logs::LogGroup",
+            "Properties": {
+              "LogGroupName": "/aws/lambda/stepfunctionspoc-dev-funcion_tres"
+            }
+          },
+          "IamRoleLambdaExecution": {
+            "Type": "AWS::IAM::Role",
+            "Properties": {
+              "AssumeRolePolicyDocument": {
+                "Version": "2012-10-17",
+                "Statement": [
+                  {
+                    "Effect": "Allow",
+                    "Principal": {
+                      "Service": [
+                        "lambda.amazonaws.com"
+                      ]
+                    },
+                    "Action": [
+                      "sts:AssumeRole"
+                    ]
+                  }
+                ]
+              },
+              "Policies": [
+                {
+                  "PolicyName": {
+                    "Fn::Join": [
+                      "-",
+                      [
+                        "stepfunctionspoc",
+                        "dev",
+                        "lambda"
+                      ]
+                    ]
+                  },
+                  "PolicyDocument": {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                      {
+                        "Effect": "Allow",
+                        "Action": [
+                          "logs:CreateLogStream",
+                          "logs:CreateLogGroup"
+                        ],
+                        "Resource": [
+                          {
+                            "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/stepfunctionspoc-dev*:*"
+                          }
+                        ]
+                      },
+                      {
+                        "Effect": "Allow",
+                        "Action": [
+                          "logs:PutLogEvents"
+                        ],
+                        "Resource": [
+                          {
+                            "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/stepfunctionspoc-dev*:*:*"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                }
+              ],
+              "Path": "/",
+              "RoleName": {
+                "Fn::Join": [
+                  "-",
+                  [
+                    "stepfunctionspoc",
+                    "dev",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    "lambdaRole"
+                  ]
+                ]
+              }
+            }
+          },
+          "EnterpriseLogAccessIamRole": {
+            "Type": "AWS::IAM::Role",
+            "Properties": {
+              "AssumeRolePolicyDocument": {
+                "Version": "2012-10-17",
+                "Statement": [
+                  {
+                    "Effect": "Allow",
+                    "Principal": {
+                      "AWS": "arn:aws:iam::802587217904:root"
+                    },
+                    "Action": "sts:AssumeRole",
+                    "Condition": {
+                      "StringEquals": {
+                        "sts:ExternalId": "ServerlessEnterprise-2NZSbkGJ39bZBtX8ww"
+                      }
+                    }
+                  }
+                ]
+              },
+              "Policies": [
+                {
+                  "PolicyName": "LogFilterAccess",
+                  "PolicyDocument": {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                      {
+                        "Effect": "Allow",
+                        "Action": [
+                          "logs:FilterLogEvents"
+                        ],
+                        "Resource": [
+                          {
+                            "Fn::GetAtt": [
+                              "InicioLogGroup",
+                              "Arn"
+                            ]
+                          },
+                          {
+                            "Fn::GetAtt": [
+                              "SeleccionarUnderscorenumeroLogGroup",
+                              "Arn"
+                            ]
+                          },
+                          {
+                            "Fn::GetAtt": [
+                              "FuncionUnderscoreunoLogGroup",
+                              "Arn"
+                            ]
+                          },
+                          {
+                            "Fn::GetAtt": [
+                              "FuncionUnderscoredosLogGroup",
+                              "Arn"
+                            ]
+                          },
+                          {
+                            "Fn::GetAtt": [
+                              "FuncionUnderscoretresLogGroup",
+                              "Arn"
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          "InicioLambdaFunction": {
+            "Type": "AWS::Lambda::Function",
+            "Properties": {
+              "Code": {
+                "S3Bucket": {
+                  "Ref": "ServerlessDeploymentBucket"
+                },
+                "S3Key": "serverless/stepfunctionspoc/dev/1612541189849-2021-02-05T16:06:29.849Z/stepfunctionspoc.zip"
+              },
+              "Handler": "s_inicio.handler",
+              "Runtime": "python3.8",
+              "FunctionName": "stepfunctionspoc-dev-inicio",
+              "MemorySize": 1024,
+              "Timeout": 6,
+              "Role": {
+                "Fn::GetAtt": [
+                  "InicioIamRoleLambdaExecution",
+                  "Arn"
+                ]
+              }
+            },
+            "DependsOn": [
+              "InicioIamRoleLambdaExecution",
+              "InicioLogGroup"
+            ]
+          },
+          "SeleccionarUnderscorenumeroLambdaFunction": {
+            "Type": "AWS::Lambda::Function",
+            "Properties": {
+              "Code": {
+                "S3Bucket": {
+                  "Ref": "ServerlessDeploymentBucket"
+                },
+                "S3Key": "serverless/stepfunctionspoc/dev/1612541189849-2021-02-05T16:06:29.849Z/stepfunctionspoc.zip"
+              },
+              "Handler": "s_seleccionar_numero.handler",
+              "Runtime": "python3.8",
+              "FunctionName": "stepfunctionspoc-dev-seleccionar_numero",
+              "MemorySize": 1024,
+              "Timeout": 6,
+              "Role": {
+                "Fn::GetAtt": [
+                  "IamRoleLambdaExecution",
+                  "Arn"
+                ]
+              }
+            },
+            "DependsOn": [
+              "SeleccionarUnderscorenumeroLogGroup"
+            ]
+          },
+          "FuncionUnderscoreunoLambdaFunction": {
+            "Type": "AWS::Lambda::Function",
+            "Properties": {
+              "Code": {
+                "S3Bucket": {
+                  "Ref": "ServerlessDeploymentBucket"
+                },
+                "S3Key": "serverless/stepfunctionspoc/dev/1612541189849-2021-02-05T16:06:29.849Z/stepfunctionspoc.zip"
+              },
+              "Handler": "s_funcion_uno.handler",
+              "Runtime": "python3.8",
+              "FunctionName": "stepfunctionspoc-dev-funcion_uno",
+              "MemorySize": 1024,
+              "Timeout": 6,
+              "Role": {
+                "Fn::GetAtt": [
+                  "IamRoleLambdaExecution",
+                  "Arn"
+                ]
+              }
+            },
+            "DependsOn": [
+              "FuncionUnderscoreunoLogGroup"
+            ]
+          },
+          "FuncionUnderscoredosLambdaFunction": {
+            "Type": "AWS::Lambda::Function",
+            "Properties": {
+              "Code": {
+                "S3Bucket": {
+                  "Ref": "ServerlessDeploymentBucket"
+                },
+                "S3Key": "serverless/stepfunctionspoc/dev/1612541189849-2021-02-05T16:06:29.849Z/stepfunctionspoc.zip"
+              },
+              "Handler": "s_funcion_dos.handler",
+              "Runtime": "python3.8",
+              "FunctionName": "stepfunctionspoc-dev-funcion_dos",
+              "MemorySize": 1024,
+              "Timeout": 6,
+              "Role": {
+                "Fn::GetAtt": [
+                  "IamRoleLambdaExecution",
+                  "Arn"
+                ]
+              }
+            },
+            "DependsOn": [
+              "FuncionUnderscoredosLogGroup"
+            ]
+          },
+          "FuncionUnderscoretresLambdaFunction": {
+            "Type": "AWS::Lambda::Function",
+            "Properties": {
+              "Code": {
+                "S3Bucket": {
+                  "Ref": "ServerlessDeploymentBucket"
+                },
+                "S3Key": "serverless/stepfunctionspoc/dev/1612541189849-2021-02-05T16:06:29.849Z/stepfunctionspoc.zip"
+              },
+              "Handler": "s_funcion_tres.handler",
+              "Runtime": "python3.8",
+              "FunctionName": "stepfunctionspoc-dev-funcion_tres",
+              "MemorySize": 1024,
+              "Timeout": 6,
+              "Role": {
+                "Fn::GetAtt": [
+                  "IamRoleLambdaExecution",
+                  "Arn"
+                ]
+              }
+            },
+            "DependsOn": [
+              "FuncionUnderscoretresLogGroup"
+            ]
+          },
+          "InicioLambdaVersionwpYNe1EPqEuq8TYohl6Hi7v9bOhJQ0EIRHwL3JOBiU": {
+            "Type": "AWS::Lambda::Version",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+              "FunctionName": {
+                "Ref": "InicioLambdaFunction"
+              },
+              "CodeSha256": "v5bmKmr/9PEM642RxM700UnVw+50AVP7J4JhR9Tdy8I="
+            }
+          },
+          "SeleccionarUnderscorenumeroLambdaVersionnqXGwgXzkqPM5xqkMZoAbAmsb4gaQnmnUg98Ap7j5E": {
+            "Type": "AWS::Lambda::Version",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+              "FunctionName": {
+                "Ref": "SeleccionarUnderscorenumeroLambdaFunction"
+              },
+              "CodeSha256": "v5bmKmr/9PEM642RxM700UnVw+50AVP7J4JhR9Tdy8I="
+            }
+          },
+          "FuncionUnderscoreunoLambdaVersionE6LHUMbvyDd3O5mFntStlgbWwLEwHOn5J1KKttbi4": {
+            "Type": "AWS::Lambda::Version",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+              "FunctionName": {
+                "Ref": "FuncionUnderscoreunoLambdaFunction"
+              },
+              "CodeSha256": "v5bmKmr/9PEM642RxM700UnVw+50AVP7J4JhR9Tdy8I="
+            }
+          },
+          "FuncionUnderscoredosLambdaVersionkU73S0erKGBojwAnjP6WSuh6QpmacaSMghPY4k0xlU": {
+            "Type": "AWS::Lambda::Version",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+              "FunctionName": {
+                "Ref": "FuncionUnderscoredosLambdaFunction"
+              },
+              "CodeSha256": "v5bmKmr/9PEM642RxM700UnVw+50AVP7J4JhR9Tdy8I="
+            }
+          },
+          "FuncionUnderscoretresLambdaVersionGLduXULt8bcsj8560z466coj1DMDcjA1sPVwe3siko": {
+            "Type": "AWS::Lambda::Version",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+              "FunctionName": {
+                "Ref": "FuncionUnderscoretresLambdaFunction"
+              },
+              "CodeSha256": "v5bmKmr/9PEM642RxM700UnVw+50AVP7J4JhR9Tdy8I="
+            }
+          },
+          "SeleccionadorNumeroRole": {
+            "Type": "AWS::IAM::Role",
+            "Properties": {
+              "AssumeRolePolicyDocument": {
+                "Version": "2012-10-17",
+                "Statement": [
+                  {
+                    "Effect": "Allow",
+                    "Principal": {
+                      "Service": "states.us-east-1.amazonaws.com"
+                    },
+                    "Action": "sts:AssumeRole"
+                  }
+                ]
+              },
+              "Policies": [
+                {
+                  "PolicyName": "dev-us-east-1-stepfunctionspoc-statemachine",
+                  "PolicyDocument": {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                      {
+                        "Effect": "Allow",
+                        "Action": [
+                          "lambda:InvokeFunction"
+                        ],
+                        "Resource": [
+                          "arn:aws:lambda:us-east-1:323413004057:function:stepfunctionspoc-dev-seleccionar_numero",
+                          {
+                            "Fn::Sub": [
+                              "${functionArn}:*",
+                              {
+                                "functionArn": "arn:aws:lambda:us-east-1:323413004057:function:stepfunctionspoc-dev-seleccionar_numero"
+                              }
+                            ]
+                          },
+                          "arn:aws:lambda:us-east-1:323413004057:function:stepfunctionspoc-dev-funcion_uno",
+                          {
+                            "Fn::Sub": [
+                              "${functionArn}:*",
+                              {
+                                "functionArn": "arn:aws:lambda:us-east-1:323413004057:function:stepfunctionspoc-dev-funcion_uno"
+                              }
+                            ]
+                          },
+                          "arn:aws:lambda:us-east-1:323413004057:function:stepfunctionspoc-dev-funcion_dos",
+                          {
+                            "Fn::Sub": [
+                              "${functionArn}:*",
+                              {
+                                "functionArn": "arn:aws:lambda:us-east-1:323413004057:function:stepfunctionspoc-dev-funcion_dos"
+                              }
+                            ]
+                          },
+                          "arn:aws:lambda:us-east-1:323413004057:function:stepfunctionspoc-dev-funcion_tres",
+                          {
+                            "Fn::Sub": [
+                              "${functionArn}:*",
+                              {
+                                "functionArn": "arn:aws:lambda:us-east-1:323413004057:function:stepfunctionspoc-dev-funcion_tres"
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "Effect": "Allow",
+                        "Action": [
+                          "logs:CreateLogDelivery",
+                          "logs:GetLogDelivery",
+                          "logs:UpdateLogDelivery",
+                          "logs:DeleteLogDelivery",
+                          "logs:ListLogDeliveries",
+                          "logs:PutResourcePolicy",
+                          "logs:DescribeResourcePolicies",
+                          "logs:DescribeLogGroups"
+                        ],
+                        "Resource": "*"
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          "HelloWorldExpressStepFunctionsStateMachineRole": {
+            "Type": "AWS::IAM::Role",
+            "Properties": {
+              "AssumeRolePolicyDocument": {
+                "Version": "2012-10-17",
+                "Statement": [
+                  {
+                    "Effect": "Allow",
+                    "Principal": {
+                      "Service": "states.us-east-1.amazonaws.com"
+                    },
+                    "Action": "sts:AssumeRole"
+                  }
+                ]
+              },
+              "Policies": [
+                {
+                  "PolicyName": "dev-us-east-1-stepfunctionspoc-statemachine",
+                  "PolicyDocument": {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                      {
+                        "Effect": "Deny",
+                        "Action": "*",
+                        "Resource": "*"
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          "SeleccionadorNumero": {
+            "Type": "AWS::StepFunctions::StateMachine",
+            "Properties": {
+              "DefinitionString": "{\n  \"Comment\": \"A simple AWS Step Functions state machine that automates a call center support session.\",\n  \"StartAt\": \"Seleccionar numero\",\n  \"States\": {\n    \"Seleccionar numero\": {\n      \"Type\": \"Task\",\n      \"Resource\": \"arn:aws:lambda:us-east-1:323413004057:function:stepfunctionspoc-dev-seleccionar_numero\",\n      \"Next\": \"Funcion Seleccionada\"\n    },\n    \"Funcion Seleccionada\": {\n      \"Type\": \"Choice\",\n      \"Choices\": [\n        {\n          \"Variable\": \"$.numero\",\n          \"NumericEquals\": 1,\n          \"Next\": \"Funcion Uno\"\n        },\n        {\n          \"Variable\": \"$.numero\",\n          \"NumericEquals\": 2,\n          \"Next\": \"Funcion Dos\"\n        },\n        {\n          \"Variable\": \"$.numero\",\n          \"NumericEquals\": 3,\n          \"Next\": \"Funcion Tres\"\n        }\n      ]\n    },\n    \"Funcion Uno\": {\n      \"Type\": \"Task\",\n      \"Resource\": \"arn:aws:lambda:us-east-1:323413004057:function:stepfunctionspoc-dev-funcion_uno\",\n      \"ResultPath\": \"$.numero\",\n      \"OutputPath\": \"$.numero\",\n      \"End\": true\n    },\n    \"Funcion Dos\": {\n      \"Type\": \"Task\",\n      \"Resource\": \"arn:aws:lambda:us-east-1:323413004057:function:stepfunctionspoc-dev-funcion_dos\",\n      \"ResultPath\": \"$.numero\",\n      \"OutputPath\": \"$.numero\",\n      \"End\": true\n    },\n    \"Funcion Tres\": {\n      \"Type\": \"Task\",\n      \"Resource\": \"arn:aws:lambda:us-east-1:323413004057:function:stepfunctionspoc-dev-funcion_tres\",\n      \"ResultPath\": \"$\",\n      \"OutputPath\": \"$.data\",\n      \"End\": true\n    }\n  }\n}",
+              "RoleArn": {
+                "Fn::GetAtt": [
+                  "SeleccionadorNumeroRole",
+                  "Arn"
+                ]
+              },
+              "StateMachineType": "EXPRESS",
+              "LoggingConfiguration": {
+                "Level": "ALL",
+                "IncludeExecutionData": true,
+                "Destinations": [
+                  {
+                    "CloudWatchLogsLogGroup": {
+                      "LogGroupArn": "arn:aws:logs:us-east-1:323413004057:log-group:stepFunctionExecutions:*"
+                    }
+                  }
+                ]
+              },
+              "StateMachineName": "seleccionadorNumero"
+            },
+            "DependsOn": [
+              "SeleccionadorNumeroRole"
+            ]
+          },
+          "HelloWorldExpressStepFunctionsStateMachine": {
+            "Type": "AWS::StepFunctions::StateMachine",
+            "Properties": {
+              "DefinitionString": "{\n  \"Comment\": \"A Hello World example of the Amazon States Language using Pass states\",\n  \"StartAt\": \"Hello\",\n  \"States\": {\n    \"Hello\": {\n      \"Type\": \"Pass\",\n      \"Result\": \"Hello\",\n      \"Next\": \"World\"\n    },\n    \"World\": {\n      \"Type\": \"Pass\",\n      \"Result\": \"World\",\n      \"End\": true\n    }\n  }\n}",
+              "RoleArn": {
+                "Fn::GetAtt": [
+                  "HelloWorldExpressStepFunctionsStateMachineRole",
+                  "Arn"
+                ]
+              },
+              "StateMachineType": "EXPRESS"
+            },
+            "DependsOn": [
+              "HelloWorldExpressStepFunctionsStateMachineRole"
+            ]
+          },
+          "ApiGatewayRestApi": {
+            "Type": "AWS::ApiGateway::RestApi",
+            "Properties": {
+              "Name": "dev-stepfunctionspoc",
+              "EndpointConfiguration": {
+                "Types": [
+                  "EDGE"
+                ]
+              },
+              "Policy": ""
+            }
+          },
+          "ApiGatewayResourceInicio": {
+            "Type": "AWS::ApiGateway::Resource",
+            "Properties": {
+              "ParentId": {
+                "Fn::GetAtt": [
+                  "ApiGatewayRestApi",
+                  "RootResourceId"
+                ]
+              },
+              "PathPart": "inicio",
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              }
+            }
+          },
+          "ApiGatewayResourceSeleccionarnumero": {
+            "Type": "AWS::ApiGateway::Resource",
+            "Properties": {
+              "ParentId": {
+                "Fn::GetAtt": [
+                  "ApiGatewayRestApi",
+                  "RootResourceId"
+                ]
+              },
+              "PathPart": "seleccionarNumero",
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              }
+            }
+          },
+          "ApiGatewayResourceFuncionuno": {
+            "Type": "AWS::ApiGateway::Resource",
+            "Properties": {
+              "ParentId": {
+                "Fn::GetAtt": [
+                  "ApiGatewayRestApi",
+                  "RootResourceId"
+                ]
+              },
+              "PathPart": "funcion_uno",
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              }
+            }
+          },
+          "ApiGatewayResourceFunciondos": {
+            "Type": "AWS::ApiGateway::Resource",
+            "Properties": {
+              "ParentId": {
+                "Fn::GetAtt": [
+                  "ApiGatewayRestApi",
+                  "RootResourceId"
+                ]
+              },
+              "PathPart": "funcion_dos",
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              }
+            }
+          },
+          "ApiGatewayResourceFunciontres": {
+            "Type": "AWS::ApiGateway::Resource",
+            "Properties": {
+              "ParentId": {
+                "Fn::GetAtt": [
+                  "ApiGatewayRestApi",
+                  "RootResourceId"
+                ]
+              },
+              "PathPart": "funcion_tres",
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              }
+            }
+          },
+          "ApiGatewayMethodInicioGet": {
+            "Type": "AWS::ApiGateway::Method",
+            "Properties": {
+              "HttpMethod": "GET",
+              "RequestParameters": {},
+              "ResourceId": {
+                "Ref": "ApiGatewayResourceInicio"
+              },
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "ApiKeyRequired": false,
+              "AuthorizationType": "NONE",
+              "Integration": {
+                "IntegrationHttpMethod": "POST",
+                "Type": "AWS_PROXY",
+                "Uri": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":apigateway:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":lambda:path/2015-03-31/functions/",
+                      {
+                        "Fn::GetAtt": [
+                          "InicioLambdaFunction",
+                          "Arn"
+                        ]
+                      },
+                      "/invocations"
+                    ]
+                  ]
+                }
+              },
+              "MethodResponses": []
+            }
+          },
+          "ApiGatewayMethodSeleccionarnumeroGet": {
+            "Type": "AWS::ApiGateway::Method",
+            "Properties": {
+              "HttpMethod": "GET",
+              "RequestParameters": {},
+              "ResourceId": {
+                "Ref": "ApiGatewayResourceSeleccionarnumero"
+              },
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "ApiKeyRequired": false,
+              "AuthorizationType": "NONE",
+              "Integration": {
+                "IntegrationHttpMethod": "POST",
+                "Type": "AWS_PROXY",
+                "Uri": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":apigateway:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":lambda:path/2015-03-31/functions/",
+                      {
+                        "Fn::GetAtt": [
+                          "SeleccionarUnderscorenumeroLambdaFunction",
+                          "Arn"
+                        ]
+                      },
+                      "/invocations"
+                    ]
+                  ]
+                }
+              },
+              "MethodResponses": []
+            }
+          },
+          "ApiGatewayMethodFuncionunoGet": {
+            "Type": "AWS::ApiGateway::Method",
+            "Properties": {
+              "HttpMethod": "GET",
+              "RequestParameters": {},
+              "ResourceId": {
+                "Ref": "ApiGatewayResourceFuncionuno"
+              },
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "ApiKeyRequired": false,
+              "AuthorizationType": "NONE",
+              "Integration": {
+                "IntegrationHttpMethod": "POST",
+                "Type": "AWS_PROXY",
+                "Uri": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":apigateway:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":lambda:path/2015-03-31/functions/",
+                      {
+                        "Fn::GetAtt": [
+                          "FuncionUnderscoreunoLambdaFunction",
+                          "Arn"
+                        ]
+                      },
+                      "/invocations"
+                    ]
+                  ]
+                }
+              },
+              "MethodResponses": []
+            }
+          },
+          "ApiGatewayMethodFunciondosGet": {
+            "Type": "AWS::ApiGateway::Method",
+            "Properties": {
+              "HttpMethod": "GET",
+              "RequestParameters": {},
+              "ResourceId": {
+                "Ref": "ApiGatewayResourceFunciondos"
+              },
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "ApiKeyRequired": false,
+              "AuthorizationType": "NONE",
+              "Integration": {
+                "IntegrationHttpMethod": "POST",
+                "Type": "AWS_PROXY",
+                "Uri": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":apigateway:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":lambda:path/2015-03-31/functions/",
+                      {
+                        "Fn::GetAtt": [
+                          "FuncionUnderscoredosLambdaFunction",
+                          "Arn"
+                        ]
+                      },
+                      "/invocations"
+                    ]
+                  ]
+                }
+              },
+              "MethodResponses": []
+            }
+          },
+          "ApiGatewayMethodFunciontresGet": {
+            "Type": "AWS::ApiGateway::Method",
+            "Properties": {
+              "HttpMethod": "GET",
+              "RequestParameters": {},
+              "ResourceId": {
+                "Ref": "ApiGatewayResourceFunciontres"
+              },
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "ApiKeyRequired": false,
+              "AuthorizationType": "NONE",
+              "Integration": {
+                "IntegrationHttpMethod": "POST",
+                "Type": "AWS_PROXY",
+                "Uri": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":apigateway:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":lambda:path/2015-03-31/functions/",
+                      {
+                        "Fn::GetAtt": [
+                          "FuncionUnderscoretresLambdaFunction",
+                          "Arn"
+                        ]
+                      },
+                      "/invocations"
+                    ]
+                  ]
+                }
+              },
+              "MethodResponses": []
+            }
+          },
+          "ApiGatewayDeployment1612541181270": {
+            "Type": "AWS::ApiGateway::Deployment",
+            "Properties": {
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "StageName": "dev"
+            },
+            "DependsOn": [
+              "ApiGatewayMethodInicioGet",
+              "ApiGatewayMethodSeleccionarnumeroGet",
+              "ApiGatewayMethodFuncionunoGet",
+              "ApiGatewayMethodFunciondosGet",
+              "ApiGatewayMethodFunciontresGet",
+              "ApiGatewayMethodSeleccionarnumeroPost",
+              "ApiGatewayMethodHelloworldexpressGet"
+            ]
+          },
+          "InicioLambdaPermissionApiGateway": {
+            "Type": "AWS::Lambda::Permission",
+            "Properties": {
+              "FunctionName": {
+                "Fn::GetAtt": [
+                  "InicioLambdaFunction",
+                  "Arn"
+                ]
+              },
+              "Action": "lambda:InvokeFunction",
+              "Principal": "apigateway.amazonaws.com",
+              "SourceArn": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition"
+                    },
+                    ":execute-api:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId"
+                    },
+                    ":",
+                    {
+                      "Ref": "ApiGatewayRestApi"
+                    },
+                    "/*/*"
+                  ]
+                ]
+              }
+            }
+          },
+          "SeleccionarUnderscorenumeroLambdaPermissionApiGateway": {
+            "Type": "AWS::Lambda::Permission",
+            "Properties": {
+              "FunctionName": {
+                "Fn::GetAtt": [
+                  "SeleccionarUnderscorenumeroLambdaFunction",
+                  "Arn"
+                ]
+              },
+              "Action": "lambda:InvokeFunction",
+              "Principal": "apigateway.amazonaws.com",
+              "SourceArn": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition"
+                    },
+                    ":execute-api:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId"
+                    },
+                    ":",
+                    {
+                      "Ref": "ApiGatewayRestApi"
+                    },
+                    "/*/*"
+                  ]
+                ]
+              }
+            }
+          },
+          "FuncionUnderscoreunoLambdaPermissionApiGateway": {
+            "Type": "AWS::Lambda::Permission",
+            "Properties": {
+              "FunctionName": {
+                "Fn::GetAtt": [
+                  "FuncionUnderscoreunoLambdaFunction",
+                  "Arn"
+                ]
+              },
+              "Action": "lambda:InvokeFunction",
+              "Principal": "apigateway.amazonaws.com",
+              "SourceArn": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition"
+                    },
+                    ":execute-api:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId"
+                    },
+                    ":",
+                    {
+                      "Ref": "ApiGatewayRestApi"
+                    },
+                    "/*/*"
+                  ]
+                ]
+              }
+            }
+          },
+          "FuncionUnderscoredosLambdaPermissionApiGateway": {
+            "Type": "AWS::Lambda::Permission",
+            "Properties": {
+              "FunctionName": {
+                "Fn::GetAtt": [
+                  "FuncionUnderscoredosLambdaFunction",
+                  "Arn"
+                ]
+              },
+              "Action": "lambda:InvokeFunction",
+              "Principal": "apigateway.amazonaws.com",
+              "SourceArn": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition"
+                    },
+                    ":execute-api:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId"
+                    },
+                    ":",
+                    {
+                      "Ref": "ApiGatewayRestApi"
+                    },
+                    "/*/*"
+                  ]
+                ]
+              }
+            }
+          },
+          "FuncionUnderscoretresLambdaPermissionApiGateway": {
+            "Type": "AWS::Lambda::Permission",
+            "Properties": {
+              "FunctionName": {
+                "Fn::GetAtt": [
+                  "FuncionUnderscoretresLambdaFunction",
+                  "Arn"
+                ]
+              },
+              "Action": "lambda:InvokeFunction",
+              "Principal": "apigateway.amazonaws.com",
+              "SourceArn": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition"
+                    },
+                    ":execute-api:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId"
+                    },
+                    ":",
+                    {
+                      "Ref": "ApiGatewayRestApi"
+                    },
+                    "/*/*"
+                  ]
+                ]
+              }
+            }
+          },
+          "ApiGatewayLogGroup": {
+            "Type": "AWS::Logs::LogGroup",
+            "Properties": {
+              "LogGroupName": "/aws/api-gateway/stepfunctionspoc-dev"
+            }
+          },
+          "CustomApiGatewayAccountCloudWatchRole": {
+            "Type": "Custom::ApiGatewayAccountRole",
+            "Version": 1,
+            "Properties": {
+              "ServiceToken": {
+                "Fn::GetAtt": [
+                  "CustomDashresourceDashapigwDashcwDashroleLambdaFunction",
+                  "Arn"
+                ]
+              }
+            }
+          },
+          "IamRoleCustomResourcesLambdaExecution": {
+            "Type": "AWS::IAM::Role",
+            "Properties": {
+              "AssumeRolePolicyDocument": {
+                "Version": "2012-10-17",
+                "Statement": [
+                  {
+                    "Effect": "Allow",
+                    "Principal": {
+                      "Service": [
+                        "lambda.amazonaws.com"
+                      ]
+                    },
+                    "Action": [
+                      "sts:AssumeRole"
+                    ]
+                  }
+                ]
+              },
+              "Policies": [
+                {
+                  "PolicyName": {
+                    "Fn::Join": [
+                      "-",
+                      [
+                        "dev",
+                        "stepfunctionspoc",
+                        "custom-resources-lambda"
+                      ]
+                    ]
+                  },
+                  "PolicyDocument": {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                      {
+                        "Effect": "Allow",
+                        "Resource": {
+                          "Fn::Join": [
+                            ":",
+                            [
+                              "arn",
+                              {
+                                "Ref": "AWS::Partition"
+                              },
+                              "iam:",
+                              {
+                                "Ref": "AWS::AccountId"
+                              },
+                              "role/*"
+                            ]
+                          ]
+                        },
+                        "Action": [
+                          "iam:AttachRolePolicy",
+                          "iam:CreateRole",
+                          "iam:ListAttachedRolePolicies",
+                          "iam:PassRole"
+                        ]
+                      },
+                      {
+                        "Effect": "Allow",
+                        "Resource": {
+                          "Fn::Join": [
+                            ":",
+                            [
+                              "arn",
+                              {
+                                "Ref": "AWS::Partition"
+                              },
+                              "apigateway:*::/account"
+                            ]
+                          ]
+                        },
+                        "Action": [
+                          "apigateway:GET",
+                          "apigateway:PATCH"
+                        ]
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          "CustomDashresourceDashapigwDashcwDashroleLambdaFunction": {
+            "Type": "AWS::Lambda::Function",
+            "Properties": {
+              "Code": {
+                "S3Bucket": {
+                  "Ref": "ServerlessDeploymentBucket"
+                },
+                "S3Key": "serverless/stepfunctionspoc/dev/1612541189849-2021-02-05T16:06:29.849Z/custom-resources.zip"
+              },
+              "FunctionName": "stepfunctionspoc-dev-custom-resource-apigw-cw-role",
+              "Handler": "apiGatewayCloudWatchRole/handler.handler",
+              "MemorySize": 1024,
+              "Runtime": "nodejs12.x",
+              "Timeout": 180,
+              "Role": {
+                "Fn::GetAtt": [
+                  "IamRoleCustomResourcesLambdaExecution",
+                  "Arn"
+                ]
+              }
+            },
+            "DependsOn": [
+              "IamRoleCustomResourcesLambdaExecution"
+            ]
+          },
+          "ApiGatewayResourceHelloworldexpress": {
+            "Type": "AWS::ApiGateway::Resource",
+            "Properties": {
+              "ParentId": {
+                "Fn::GetAtt": [
+                  "ApiGatewayRestApi",
+                  "RootResourceId"
+                ]
+              },
+              "PathPart": "helloWorldExpress",
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              }
+            }
+          },
+          "ApiGatewayMethodSeleccionarnumeroPost": {
+            "Type": "AWS::ApiGateway::Method",
+            "Properties": {
+              "HttpMethod": "POST",
+              "RequestParameters": {},
+              "AuthorizationType": "NONE",
+              "ApiKeyRequired": false,
+              "ResourceId": {
+                "Ref": "ApiGatewayResourceSeleccionarnumero"
+              },
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "Integration": {
+                "IntegrationHttpMethod": "POST",
+                "Type": "AWS",
+                "Credentials": {
+                  "Fn::GetAtt": [
+                    "ApigatewayToStepFunctionsRole",
+                    "Arn"
+                  ]
+                },
+                "Uri": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":apigateway:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":states:action/StartExecution"
+                    ]
+                  ]
+                },
+                "PassthroughBehavior": "NEVER",
+                "RequestTemplates": {
+                  "application/json": {
+                    "Fn::Sub": [
+                      "\n#set( $body = $util.escapeJavaScript($input.json('$')).replaceAll(\"\\\\'\", \"'\") )\n{\"input\": \"$body\", \"name\": \"$context.requestId\", \"stateMachineArn\":\"${StateMachineArn}\"}",
+                      {
+                        "StateMachineArn": {
+                          "Ref": "SeleccionadorNumero"
+                        }
+                      }
+                    ]
+                  },
+                  "application/x-www-form-urlencoded": {
+                    "Fn::Sub": [
+                      "\n#set( $body = $util.escapeJavaScript($input.json('$')).replaceAll(\"\\\\'\", \"'\") )\n{\"input\": \"$body\", \"name\": \"$context.requestId\", \"stateMachineArn\":\"${StateMachineArn}\"}",
+                      {
+                        "StateMachineArn": {
+                          "Ref": "SeleccionadorNumero"
+                        }
+                      }
+                    ]
+                  }
+                },
+                "IntegrationResponses": [
+                  {
+                    "StatusCode": 200,
+                    "SelectionPattern": 200,
+                    "ResponseParameters": {},
+                    "ResponseTemplates": {}
+                  },
+                  {
+                    "StatusCode": 400,
+                    "SelectionPattern": 400,
+                    "ResponseParameters": {},
+                    "ResponseTemplates": {}
+                  }
+                ]
+              },
+              "MethodResponses": [
+                {
+                  "ResponseParameters": {},
+                  "ResponseModels": {},
+                  "StatusCode": 200
+                },
+                {
+                  "ResponseParameters": {},
+                  "ResponseModels": {},
+                  "StatusCode": 400
+                }
+              ]
+            }
+          },
+          "ApiGatewayMethodHelloworldexpressGet": {
+            "Type": "AWS::ApiGateway::Method",
+            "Properties": {
+              "HttpMethod": "GET",
+              "RequestParameters": {},
+              "AuthorizationType": "NONE",
+              "ApiKeyRequired": false,
+              "ResourceId": {
+                "Ref": "ApiGatewayResourceHelloworldexpress"
+              },
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "Integration": {
+                "IntegrationHttpMethod": "POST",
+                "Type": "AWS",
+                "Credentials": {
+                  "Fn::GetAtt": [
+                    "ApigatewayToStepFunctionsRole",
+                    "Arn"
+                  ]
+                },
+                "Uri": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":apigateway:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":states:action/StartExecution"
+                    ]
+                  ]
+                },
+                "PassthroughBehavior": "NEVER",
+                "RequestTemplates": {
+                  "application/json": {
+                    "Fn::Sub": [
+                      "\n#set( $body = $util.escapeJavaScript($input.json('$')).replaceAll(\"\\\\'\", \"'\") )\n{\"input\": \"$body\", \"name\": \"$context.requestId\", \"stateMachineArn\":\"${StateMachineArn}\"}",
+                      {
+                        "StateMachineArn": {
+                          "Ref": "HelloWorldExpressStepFunctionsStateMachine"
+                        }
+                      }
+                    ]
+                  },
+                  "application/x-www-form-urlencoded": {
+                    "Fn::Sub": [
+                      "\n#set( $body = $util.escapeJavaScript($input.json('$')).replaceAll(\"\\\\'\", \"'\") )\n{\"input\": \"$body\", \"name\": \"$context.requestId\", \"stateMachineArn\":\"${StateMachineArn}\"}",
+                      {
+                        "StateMachineArn": {
+                          "Ref": "HelloWorldExpressStepFunctionsStateMachine"
+                        }
+                      }
+                    ]
+                  }
+                },
+                "IntegrationResponses": [
+                  {
+                    "StatusCode": 200,
+                    "SelectionPattern": 200,
+                    "ResponseParameters": {},
+                    "ResponseTemplates": {}
+                  },
+                  {
+                    "StatusCode": 400,
+                    "SelectionPattern": 400,
+                    "ResponseParameters": {},
+                    "ResponseTemplates": {}
+                  }
+                ]
+              },
+              "MethodResponses": [
+                {
+                  "ResponseParameters": {},
+                  "ResponseModels": {},
+                  "StatusCode": 200
+                },
+                {
+                  "ResponseParameters": {},
+                  "ResponseModels": {},
+                  "StatusCode": 400
+                }
+              ]
+            }
+          },
+          "ApigatewayToStepFunctionsRole": {
+            "Type": "AWS::IAM::Role",
+            "Properties": {
+              "AssumeRolePolicyDocument": {
+                "Version": "2012-10-17",
+                "Statement": [
+                  {
+                    "Effect": "Allow",
+                    "Principal": {
+                      "Service": "apigateway.amazonaws.com"
+                    },
+                    "Action": "sts:AssumeRole"
+                  }
+                ]
+              },
+              "Policies": [
+                {
+                  "PolicyName": "apigatewaytostepfunctions",
+                  "PolicyDocument": {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                      {
+                        "Effect": "Allow",
+                        "Action": [
+                          "states:StartExecution"
+                        ],
+                        "Resource": "*"
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          "InicioIamRoleLambdaExecution": {
+            "Type": "AWS::IAM::Role",
+            "Properties": {
+              "AssumeRolePolicyDocument": {
+                "Version": "2012-10-17",
+                "Statement": [
+                  {
+                    "Effect": "Allow",
+                    "Principal": {
+                      "Service": [
+                        "lambda.amazonaws.com"
+                      ]
+                    },
+                    "Action": [
+                      "sts:AssumeRole"
+                    ]
+                  }
+                ]
+              },
+              "Policies": [
+                {
+                  "PolicyName": {
+                    "Fn::Join": [
+                      "-",
+                      [
+                        "stepfunctionspoc",
+                        "dev",
+                        "lambda"
+                      ]
+                    ]
+                  },
+                  "PolicyDocument": {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                      {
+                        "Effect": "Allow",
+                        "Action": [
+                          "logs:CreateLogStream",
+                          "logs:CreateLogGroup",
+                          "logs:PutLogEvents"
+                        ],
+                        "Resource": [
+                          {
+                            "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/stepfunctionspoc-dev-inicio:*:*"
+                          }
+                        ]
+                      },
+                      {
+                        "Effect": "Allow",
+                        "Action": [
+                          "states:StartSyncExecution"
+                        ],
+                        "Resource": "arn:aws:states:us-east-1:323413004057:stateMachine:HelloWorldExpressStepFunctionsStateMachine-MAMH67pUjivc"
+                      }
+                    ]
+                  }
+                }
+              ],
+              "Path": "/",
+              "RoleName": {
+                "Fn::Join": [
+                  "-",
+                  [
+                    "stepfunctionspoc",
+                    "dev",
+                    "inicio",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    "lambdaRole"
+                  ]
+                ]
+              },
+              "ManagedPolicyArns": []
+            }
+          },
+          "CloudWatchLogsSubscriptionFilterInicioLogGroup": {
+            "Type": "AWS::Logs::SubscriptionFilter",
+            "Properties": {
+              "DestinationArn": "arn:aws:logs:us-east-1:802587217904:destination:2NZSbkGJ39bZBtX8ww#DpzDlW67BbNQ37jfgG#stepfunctionspoc#dev",
+              "FilterPattern": "?\"REPORT RequestId: \" ?\"SERVERLESS_ENTERPRISE\"",
+              "LogGroupName": {
+                "Ref": "InicioLogGroup"
+              }
+            }
+          },
+          "CloudWatchLogsSubscriptionFilterSeleccionarUnderscorenumeroLogGroup": {
+            "Type": "AWS::Logs::SubscriptionFilter",
+            "Properties": {
+              "DestinationArn": "arn:aws:logs:us-east-1:802587217904:destination:2NZSbkGJ39bZBtX8ww#DpzDlW67BbNQ37jfgG#stepfunctionspoc#dev",
+              "FilterPattern": "?\"REPORT RequestId: \" ?\"SERVERLESS_ENTERPRISE\"",
+              "LogGroupName": {
+                "Ref": "SeleccionarUnderscorenumeroLogGroup"
+              }
+            }
+          },
+          "CloudWatchLogsSubscriptionFilterFuncionUnderscoreunoLogGroup": {
+            "Type": "AWS::Logs::SubscriptionFilter",
+            "Properties": {
+              "DestinationArn": "arn:aws:logs:us-east-1:802587217904:destination:2NZSbkGJ39bZBtX8ww#DpzDlW67BbNQ37jfgG#stepfunctionspoc#dev",
+              "FilterPattern": "?\"REPORT RequestId: \" ?\"SERVERLESS_ENTERPRISE\"",
+              "LogGroupName": {
+                "Ref": "FuncionUnderscoreunoLogGroup"
+              }
+            }
+          },
+          "CloudWatchLogsSubscriptionFilterFuncionUnderscoredosLogGroup": {
+            "Type": "AWS::Logs::SubscriptionFilter",
+            "Properties": {
+              "DestinationArn": "arn:aws:logs:us-east-1:802587217904:destination:2NZSbkGJ39bZBtX8ww#DpzDlW67BbNQ37jfgG#stepfunctionspoc#dev",
+              "FilterPattern": "?\"REPORT RequestId: \" ?\"SERVERLESS_ENTERPRISE\"",
+              "LogGroupName": {
+                "Ref": "FuncionUnderscoredosLogGroup"
+              }
+            }
+          },
+          "CloudWatchLogsSubscriptionFilterFuncionUnderscoretresLogGroup": {
+            "Type": "AWS::Logs::SubscriptionFilter",
+            "Properties": {
+              "DestinationArn": "arn:aws:logs:us-east-1:802587217904:destination:2NZSbkGJ39bZBtX8ww#DpzDlW67BbNQ37jfgG#stepfunctionspoc#dev",
+              "FilterPattern": "?\"REPORT RequestId: \" ?\"SERVERLESS_ENTERPRISE\"",
+              "LogGroupName": {
+                "Ref": "FuncionUnderscoretresLogGroup"
+              }
+            }
+          },
+          "CloudWatchLogsSubscriptionFilterApiGatewayLogGroup": {
+            "Type": "AWS::Logs::SubscriptionFilter",
+            "Properties": {
+              "DestinationArn": "arn:aws:logs:us-east-1:802587217904:destination:2NZSbkGJ39bZBtX8ww#DpzDlW67BbNQ37jfgG#stepfunctionspoc#dev",
+              "FilterPattern": "\"SLS_ACCESS_LOG\"",
+              "LogGroupName": {
+                "Ref": "ApiGatewayLogGroup"
+              }
+            }
+          }
+        },
+        "Outputs": {
+          "ServerlessDeploymentBucketName": {
+            "Value": {
+              "Ref": "ServerlessDeploymentBucket"
+            }
+          },
+          "EnterpriseLogAccessIamRole": {
+            "Value": {
+              "Fn::GetAtt": [
+                "EnterpriseLogAccessIamRole",
+                "Arn"
+              ]
+            }
+          },
+          "InicioLambdaFunctionQualifiedArn": {
+            "Description": "Current Lambda function version",
+            "Value": {
+              "Ref": "InicioLambdaVersionwpYNe1EPqEuq8TYohl6Hi7v9bOhJQ0EIRHwL3JOBiU"
+            }
+          },
+          "SeleccionarUnderscorenumeroLambdaFunctionQualifiedArn": {
+            "Description": "Current Lambda function version",
+            "Value": {
+              "Ref": "SeleccionarUnderscorenumeroLambdaVersionnqXGwgXzkqPM5xqkMZoAbAmsb4gaQnmnUg98Ap7j5E"
+            }
+          },
+          "FuncionUnderscoreunoLambdaFunctionQualifiedArn": {
+            "Description": "Current Lambda function version",
+            "Value": {
+              "Ref": "FuncionUnderscoreunoLambdaVersionE6LHUMbvyDd3O5mFntStlgbWwLEwHOn5J1KKttbi4"
+            }
+          },
+          "FuncionUnderscoredosLambdaFunctionQualifiedArn": {
+            "Description": "Current Lambda function version",
+            "Value": {
+              "Ref": "FuncionUnderscoredosLambdaVersionkU73S0erKGBojwAnjP6WSuh6QpmacaSMghPY4k0xlU"
+            }
+          },
+          "FuncionUnderscoretresLambdaFunctionQualifiedArn": {
+            "Description": "Current Lambda function version",
+            "Value": {
+              "Ref": "FuncionUnderscoretresLambdaVersionGLduXULt8bcsj8560z466coj1DMDcjA1sPVwe3siko"
+            }
+          },
+          "SeleccionadorNumeroArn": {
+            "Description": "Current StateMachine Arn",
+            "Value": {
+              "Ref": "SeleccionadorNumero"
+            }
+          },
+          "HelloWorldExpressStepFunctionsStateMachineArn": {
+            "Description": "Current StateMachine Arn",
+            "Value": {
+              "Ref": "HelloWorldExpressStepFunctionsStateMachine"
+            }
+          },
+          "ServiceEndpoint": {
+            "Description": "URL of the service endpoint",
+            "Value": {
+              "Fn::Join": [
+                "",
+                [
+                  "https://",
+                  {
+                    "Ref": "ApiGatewayRestApi"
+                  },
+                  ".execute-api.",
+                  {
+                    "Ref": "AWS::Region"
+                  },
+                  ".",
+                  {
+                    "Ref": "AWS::URLSuffix"
+                  },
+                  "/dev"
+                ]
+              ]
+            }
+          }
+        }
+      },
+      "coreCloudFormationTemplate": {
+        "AWSTemplateFormatVersion": "2010-09-09",
+        "Description": "The AWS CloudFormation template for this Serverless application",
+        "Resources": {
+          "ServerlessDeploymentBucket": {
+            "Type": "AWS::S3::Bucket",
+            "Properties": {
+              "BucketEncryption": {
+                "ServerSideEncryptionConfiguration": [
+                  {
+                    "ServerSideEncryptionByDefault": {
+                      "SSEAlgorithm": "AES256"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          "ServerlessDeploymentBucketPolicy": {
+            "Type": "AWS::S3::BucketPolicy",
+            "Properties": {
+              "Bucket": {
+                "Ref": "ServerlessDeploymentBucket"
+              },
+              "PolicyDocument": {
+                "Statement": [
+                  {
+                    "Action": "s3:*",
+                    "Effect": "Deny",
+                    "Principal": "*",
+                    "Resource": [
+                      {
+                        "Fn::Join": [
+                          "",
+                          [
+                            "arn:",
+                            {
+                              "Ref": "AWS::Partition"
+                            },
+                            ":s3:::",
+                            {
+                              "Ref": "ServerlessDeploymentBucket"
+                            },
+                            "/*"
+                          ]
+                        ]
+                      },
+                      {
+                        "Fn::Join": [
+                          "",
+                          [
+                            "arn:",
+                            {
+                              "Ref": "AWS::Partition"
+                            },
+                            ":s3:::",
+                            {
+                              "Ref": "ServerlessDeploymentBucket"
+                            }
+                          ]
+                        ]
+                      }
+                    ],
+                    "Condition": {
+                      "Bool": {
+                        "aws:SecureTransport": false
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "Outputs": {
+          "ServerlessDeploymentBucketName": {
+            "Value": {
+              "Ref": "ServerlessDeploymentBucket"
+            }
+          }
+        }
+      },
+      "logs": {
+        "restApi": {
+          "format": "{\"requestTime\":\"$context.requestTime\",\"requestId\":\"$context.requestId\",\"apiId\":\"$context.apiId\",\"resourceId\":\"$context.resourceId\",\"resourcePath\":\"$context.resourcePath\",\"path\":\"$context.path\",\"httpMethod\":\"$context.httpMethod\",\"status\":\"$context.status\",\"authLatency\":\"$context.authorizer.integrationLatency\",\"integrationLatency\":\"$context.integrationLatency\",\"integrationStatus\":\"$context.integrationStatus\",\"responseLatency\":\"$context.responseLatency\",\"responseLength\":\"$context.responseLength\",\"errorMessage\":\"$context.error.message\",\"format\":\"SLS_ACCESS_LOG\",\"version\":\"1.0.0\"}"
+        }
+      },
+      "vpc": {}
+    },
+    "plugins": [
+      "serverless-iam-roles-per-function",
+      "serverless-step-functions"
+    ],
+    "pluginsData": {},
+    "functions": {
+      "inicio": {
+        "handler": "s_inicio.handler",
+        "events": [
+          {
+            "http": {
+              "path": "inicio",
+              "method": "get",
+              "integration": "AWS_PROXY"
+            }
+          }
+        ],
+        "iamRoleStatements": [
+          {
+            "$ref": "$[\"service\"][\"provider\"][\"compiledCloudFormationTemplate\"][\"Resources\"][\"InicioIamRoleLambdaExecution\"][\"Properties\"][\"Policies\"][0][\"PolicyDocument\"][\"Statement\"][1]"
+          }
+        ],
+        "name": "stepfunctionspoc-dev-inicio",
+        "package": {},
+        "memory": 1024,
+        "timeout": 6,
+        "runtime": "python3.8",
+        "vpc": {},
+        "versionLogicalId": "InicioLambdaVersionwpYNe1EPqEuq8TYohl6Hi7v9bOhJQ0EIRHwL3JOBiU"
+      },
+      "seleccionar_numero": {
+        "handler": "s_seleccionar_numero.handler",
+        "events": [
+          {
+            "http": {
+              "path": "seleccionar_numero",
+              "method": "get",
+              "integration": "AWS_PROXY"
+            }
+          }
+        ],
+        "name": "stepfunctionspoc-dev-seleccionar_numero",
+        "package": {},
+        "memory": 1024,
+        "timeout": 6,
+        "runtime": "python3.8",
+        "vpc": {},
+        "versionLogicalId": "SeleccionarUnderscorenumeroLambdaVersionnqXGwgXzkqPM5xqkMZoAbAmsb4gaQnmnUg98Ap7j5E"
+      },
+      "funcion_uno": {
+        "handler": "s_funcion_uno.handler",
+        "events": [
+          {
+            "http": {
+              "path": "funcion_uno",
+              "method": "get",
+              "integration": "AWS_PROXY"
+            }
+          }
+        ],
+        "name": "stepfunctionspoc-dev-funcion_uno",
+        "package": {},
+        "memory": 1024,
+        "timeout": 6,
+        "runtime": "python3.8",
+        "vpc": {},
+        "versionLogicalId": "FuncionUnderscoreunoLambdaVersionE6LHUMbvyDd3O5mFntStlgbWwLEwHOn5J1KKttbi4"
+      },
+      "funcion_dos": {
+        "handler": "s_funcion_dos.handler",
+        "events": [
+          {
+            "http": {
+              "path": "funcion_dos",
+              "method": "get",
+              "integration": "AWS_PROXY"
+            }
+          }
+        ],
+        "name": "stepfunctionspoc-dev-funcion_dos",
+        "package": {},
+        "memory": 1024,
+        "timeout": 6,
+        "runtime": "python3.8",
+        "vpc": {},
+        "versionLogicalId": "FuncionUnderscoredosLambdaVersionkU73S0erKGBojwAnjP6WSuh6QpmacaSMghPY4k0xlU"
+      },
+      "funcion_tres": {
+        "handler": "s_funcion_tres.handler",
+        "events": [
+          {
+            "http": {
+              "path": "funcion_tres",
+              "method": "get",
+              "integration": "AWS_PROXY"
+            }
+          }
+        ],
+        "name": "stepfunctionspoc-dev-funcion_tres",
+        "package": {},
+        "memory": 1024,
+        "timeout": 6,
+        "runtime": "python3.8",
+        "vpc": {},
+        "versionLogicalId": "FuncionUnderscoretresLambdaVersionGLduXULt8bcsj8560z466coj1DMDcjA1sPVwe3siko"
+      }
+    },
+    "configValidationMode": "warn",
+    "serviceFilename": "serverless.yml",
+    "app": "stepfunctionspoc",
+    "org": "jhtobav",
+    "layers": {},
+    "initialServerlessConfig": {
+      "service": {
+        "$ref": "$[\"service\"][\"serviceObject\"]"
+      },
+      "app": "stepfunctionspoc",
+      "org": "jhtobav",
+      "frameworkVersion": "2",
+      "plugins": {
+        "$ref": "$[\"service\"][\"plugins\"]"
+      },
+      "provider": {
+        "$ref": "$[\"service\"][\"provider\"]"
+      },
+      "functions": {
+        "$ref": "$[\"service\"][\"functions\"]"
+      },
+      "stepFunctions": {
+        "stateMachines": {
+          "seleccionadorNumeros": {
+            "type": "EXPRESS",
+            "loggingConfig": {
+              "level": "ALL",
+              "includeExecutionData": true,
+              "destinations": [
+                "arn:aws:logs:us-east-1:323413004057:log-group:stepFunctionExecutions:*"
+              ]
+            },
+            "events": [
+              {
+                "http": {
+                  "path": "seleccionarNumero",
+                  "method": "post"
+                }
+              }
+            ],
+            "name": "seleccionadorNumero",
+            "definition": {
+              "Comment": "A simple AWS Step Functions state machine that automates a call center support session.",
+              "StartAt": "Seleccionar numero",
+              "States": {
+                "Seleccionar numero": {
+                  "Type": "Task",
+                  "Resource": "arn:aws:lambda:us-east-1:323413004057:function:stepfunctionspoc-dev-seleccionar_numero",
+                  "Next": "Funcion Seleccionada"
+                },
+                "Funcion Seleccionada": {
+                  "Type": "Choice",
+                  "Choices": [
+                    {
+                      "Variable": "$.numero",
+                      "NumericEquals": 1,
+                      "Next": "Funcion Uno"
+                    },
+                    {
+                      "Variable": "$.numero",
+                      "NumericEquals": 2,
+                      "Next": "Funcion Dos"
+                    },
+                    {
+                      "Variable": "$.numero",
+                      "NumericEquals": 3,
+                      "Next": "Funcion Tres"
+                    }
+                  ]
+                },
+                "Funcion Uno": {
+                  "Type": "Task",
+                  "Resource": "arn:aws:lambda:us-east-1:323413004057:function:stepfunctionspoc-dev-funcion_uno",
+                  "ResultPath": "$.numero",
+                  "OutputPath": "$.numero",
+                  "End": true
+                },
+                "Funcion Dos": {
+                  "Type": "Task",
+                  "Resource": "arn:aws:lambda:us-east-1:323413004057:function:stepfunctionspoc-dev-funcion_dos",
+                  "ResultPath": "$.numero",
+                  "OutputPath": "$.numero",
+                  "End": true
+                },
+                "Funcion Tres": {
+                  "Type": "Task",
+                  "Resource": "arn:aws:lambda:us-east-1:323413004057:function:stepfunctionspoc-dev-funcion_tres",
+                  "ResultPath": "$",
+                  "OutputPath": "$.data",
+                  "End": true
+                }
+              }
+            }
+          },
+          "helloWorldExpress": {
+            "type": "EXPRESS",
+            "events": [
+              {
+                "http": {
+                  "path": "helloWorldExpress",
+                  "method": "get"
+                }
+              }
+            ],
+            "definition": {
+              "Comment": "A Hello World example of the Amazon States Language using Pass states",
+              "StartAt": "Hello",
+              "States": {
+                "Hello": {
+                  "Type": "Pass",
+                  "Result": "Hello",
+                  "Next": "World"
+                },
+                "World": {
+                  "Type": "Pass",
+                  "Result": "World",
+                  "End": true
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "isDashboardMonitoringPreconfigured": true,
+    "isDashboardAppPreconfigured": true,
+    "orgUid": "2NZSbkGJ39bZBtX8ww",
+    "stepFunctions": {
+      "stateMachines": {
+        "seleccionadorNumeros": {
+          "type": "EXPRESS",
+          "loggingConfig": {
+            "level": "ALL",
+            "includeExecutionData": true,
+            "destinations": [
+              "arn:aws:logs:us-east-1:323413004057:log-group:stepFunctionExecutions:*"
+            ]
+          },
+          "events": [
+            {
+              "http": {
+                "path": "seleccionarNumero",
+                "method": "post"
+              }
+            }
+          ],
+          "name": "seleccionadorNumero",
+          "definition": {
+            "Comment": "A simple AWS Step Functions state machine that automates a call center support session.",
+            "StartAt": "Seleccionar numero",
+            "States": {
+              "Seleccionar numero": {
+                "Type": "Task",
+                "Resource": "arn:aws:lambda:us-east-1:323413004057:function:stepfunctionspoc-dev-seleccionar_numero",
+                "Next": "Funcion Seleccionada"
+              },
+              "Funcion Seleccionada": {
+                "Type": "Choice",
+                "Choices": [
+                  {
+                    "Variable": "$.numero",
+                    "NumericEquals": 1,
+                    "Next": "Funcion Uno"
+                  },
+                  {
+                    "Variable": "$.numero",
+                    "NumericEquals": 2,
+                    "Next": "Funcion Dos"
+                  },
+                  {
+                    "Variable": "$.numero",
+                    "NumericEquals": 3,
+                    "Next": "Funcion Tres"
+                  }
+                ]
+              },
+              "Funcion Uno": {
+                "Type": "Task",
+                "Resource": "arn:aws:lambda:us-east-1:323413004057:function:stepfunctionspoc-dev-funcion_uno",
+                "ResultPath": "$.numero",
+                "OutputPath": "$.numero",
+                "End": true
+              },
+              "Funcion Dos": {
+                "Type": "Task",
+                "Resource": "arn:aws:lambda:us-east-1:323413004057:function:stepfunctionspoc-dev-funcion_dos",
+                "ResultPath": "$.numero",
+                "OutputPath": "$.numero",
+                "End": true
+              },
+              "Funcion Tres": {
+                "Type": "Task",
+                "Resource": "arn:aws:lambda:us-east-1:323413004057:function:stepfunctionspoc-dev-funcion_tres",
+                "ResultPath": "$",
+                "OutputPath": "$.data",
+                "End": true
+              }
+            }
+          }
+        },
+        "helloWorldExpress": {
+          "type": "EXPRESS",
+          "events": [
+            {
+              "http": {
+                "path": "helloWorldExpress",
+                "method": "get"
+              }
+            }
+          ],
+          "definition": {
+            "Comment": "A Hello World example of the Amazon States Language using Pass states",
+            "StartAt": "Hello",
+            "States": {
+              "Hello": {
+                "Type": "Pass",
+                "Result": "Hello",
+                "Next": "World"
+              },
+              "World": {
+                "Type": "Pass",
+                "Result": "World",
+                "End": true
+              }
+            }
+          }
+        }
+      },
+      "activities": []
+    },
+    "appUid": "DpzDlW67BbNQ37jfgG",
+    "artifact": "/home/jhtobav/Documents/workspace/DCM/stepFunctionsPOC/.serverless/stepfunctionspoc.zip"
+  },
+  "package": {
+    "artifactDirectoryName": "serverless/stepfunctionspoc/dev/1612541189849-2021-02-05T16:06:29.849Z",
+    "artifact": "stepfunctionspoc.zip"
+  }
+}

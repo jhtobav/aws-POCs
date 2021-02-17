@@ -1,0 +1,83 @@
+service: lambdaauthorizer
+app: lambdaauthorizer
+org: jhtobav
+
+frameworkVersion: '2'
+
+plugins:
+  - serverless-iam-roles-per-function
+  - serverless-python-requirements
+
+provider:
+  name: aws
+  runtime: python3.8
+  lambdaHashingVersion: 20201221
+
+package:
+  individually: true
+  exclude:
+    - env/**
+    - node_modules/**
+    - .vscode/**
+    - .idea/**
+
+functions:
+  signin:
+    handler: signin.sign_in
+    events:
+      - http:
+          path: signin
+          method: post
+    iamRoleStatements:
+      - Effect: "Allow"
+        Action:
+          - "cognito-idp:AdminInitiateAuth"
+        Resource: "arn:aws:cognito-idp:us-east-1:323413004057:userpool/us-east-1_jCOnOGPsz"
+      - Effect: "Allow"
+        Action:
+          - "cognito-idp:AdminInitiateAuth"
+        Resource: "arn:aws:cognito-idp:us-east-1:220228648715:userpool/us-east-1_NsKXmRvr9"
+      - Effect: "Allow"
+        Action:
+          - "cognito-idp:AdminInitiateAuth"
+        Resource: "arn:aws:cognito-idp:us-east-1:409044723547:userpool/us-east-1_h6iqBsTk4"
+      - Effect: "Allow"
+        Action:
+          - "cognito-idp:AdminInitiateAuth"
+        Resource: "arn:aws:cognito-idp:us-east-1:323413004057:userpool/us-east-1_cYinjitZ1"
+  signup:
+    handler: signup.sign_up
+    events:
+      - http:
+          path: signup
+          method: post
+    iamRoleStatements:
+      - Effect: "Allow"
+        Action:
+          - "cognito-idp:AdminInitiateAuth"
+          - "cognito-idp:AdminCreateUser"
+        Resource: "arn:aws:cognito-idp:us-east-1:323413004057:userpool/us-east-1_jCOnOGPsz"
+      - Effect: "Allow"
+        Action:
+          - "cognito-idp:AdminInitiateAuth"
+          - "cognito-idp:AdminCreateUser"
+        Resource: "arn:aws:cognito-idp:us-east-1:220228648715:userpool/us-east-1_NsKXmRvr9"
+      - Effect: "Allow"
+        Action:
+          - "cognito-idp:AdminInitiateAuth"
+          - "cognito-idp:AdminCreateUser"
+        Resource: "arn:aws:cognito-idp:us-east-1:409044723547:userpool/us-east-1_h6iqBsTk4"
+      - Effect: "Allow"
+        Action:
+          - "cognito-idp:AdminInitiateAuth"
+          - "cognito-idp:AdminCreateUser"
+        Resource: "arn:aws:cognito-idp:us-east-1:323413004057:userpool/us-east-1_cYinjitZ1"
+  servicio:
+    handler: servicio.servicio
+    events:
+      - http:
+          path: servicio
+          method: get
+          authorizer: lambda_authorizer
+  lambda_authorizer:
+    handler: authorizer.authorizer
