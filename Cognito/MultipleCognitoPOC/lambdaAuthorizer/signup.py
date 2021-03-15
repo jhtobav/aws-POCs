@@ -16,9 +16,11 @@ def sign_up(event, context):
             UserAttributes=[
                 { 'Name': 'name', 'Value': bodyevent.get('name') },
                 { 'Name': 'email', 'Value': bodyevent.get('email') },
+                { 'Name': 'phone_number', 'Value': bodyevent.get('phone_number') },
             ],
             TemporaryPassword = bodyevent.get('temporaryPassword'),
-            MessageAction='SUPPRESS'
+            MessageAction='SUPPRESS',
+            DesiredDeliveryMediums=['SMS']
         )
 
         resp = client.admin_initiate_auth(

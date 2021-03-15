@@ -34,6 +34,10 @@ functions:
         Action:
           - "cognito-idp:AdminInitiateAuth"
         Resource: "arn:aws:cognito-idp:us-east-1:220228648715:userpool/us-east-1_NsKXmRvr9"
+      - Effect: "Allow"
+        Action:
+          - "cognito-idp:AdminInitiateAuth"
+        Resource: "arn:aws:cognito-idp:us-east-1:220228648715:userpool/us-east-1_yaIF6XRuN"
   signup:
     handler: signup.sign_up
     events:
@@ -46,16 +50,32 @@ functions:
           - "cognito-idp:AdminInitiateAuth"
           - "cognito-idp:AdminCreateUser"
         Resource: "arn:aws:cognito-idp:us-east-1:220228648715:userpool/us-east-1_NsKXmRvr9"
+      - Effect: "Allow"
+        Action:
+          - "cognito-idp:AdminInitiateAuth"
+          - "cognito-idp:AdminCreateUser"
+        Resource: "arn:aws:cognito-idp:us-east-1:220228648715:userpool/us-east-1_yaIF6XRuN"
   servicio:
     handler: servicio.servicio
     events:
       - http:
           path: servicio
           method: get
+          cors: true
           authorizer:
             type: COGNITO_USER_POOLS
             authorizerId:
               Ref: ApiGatewayAuthorizer
+  servicio_openid:
+    handler: servicio_openid.servicio_openid
+    events:
+      - http:
+          path: servicio_openid
+          method: get
+      - http:
+          path: /{proxy+}
+          method: any
+          cors: true
 
 resources:
   Resources:
@@ -72,3 +92,4 @@ resources:
           - arn:aws:cognito-idp:us-east-1:220228648715:userpool/us-east-1_NsKXmRvr9
           - arn:aws:cognito-idp:us-east-1:323413004057:userpool/us-east-1_jCOnOGPsz
           - arn:aws:cognito-idp:us-east-1:409044723547:userpool/us-east-1_h6iqBsTk4
+          - arn:aws:cognito-idp:us-east-1:220228648715:userpool/us-east-1_C3b2twHDV

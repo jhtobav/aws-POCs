@@ -91,6 +91,18 @@
               "LogGroupName": "/aws/lambda/lambdaauthorizer-dev-signin"
             }
           },
+          "SigninUnderscorecrossUnderscoreaccountLogGroup": {
+            "Type": "AWS::Logs::LogGroup",
+            "Properties": {
+              "LogGroupName": "/aws/lambda/lambdaauthorizer-dev-signin_cross_account"
+            }
+          },
+          "SigninUnderscoreopenidLogGroup": {
+            "Type": "AWS::Logs::LogGroup",
+            "Properties": {
+              "LogGroupName": "/aws/lambda/lambdaauthorizer-dev-signin_openid"
+            }
+          },
           "SignupLogGroup": {
             "Type": "AWS::Logs::LogGroup",
             "Properties": {
@@ -226,6 +238,18 @@
                           },
                           {
                             "Fn::GetAtt": [
+                              "SigninUnderscorecrossUnderscoreaccountLogGroup",
+                              "Arn"
+                            ]
+                          },
+                          {
+                            "Fn::GetAtt": [
+                              "SigninUnderscoreopenidLogGroup",
+                              "Arn"
+                            ]
+                          },
+                          {
+                            "Fn::GetAtt": [
                               "SignupLogGroup",
                               "Arn"
                             ]
@@ -257,7 +281,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/lambdaauthorizer/dev/1613434857274-2021-02-16T00:20:57.274Z/signin.zip"
+                "S3Key": "serverless/lambdaauthorizer/dev/1614866461937-2021-03-04T14:01:01.937Z/signin.zip"
               },
               "Handler": "s_signin.handler",
               "Runtime": "python3.8",
@@ -276,6 +300,58 @@
               "SigninLogGroup"
             ]
           },
+          "SigninUnderscorecrossUnderscoreaccountLambdaFunction": {
+            "Type": "AWS::Lambda::Function",
+            "Properties": {
+              "Code": {
+                "S3Bucket": {
+                  "Ref": "ServerlessDeploymentBucket"
+                },
+                "S3Key": "serverless/lambdaauthorizer/dev/1614866461937-2021-03-04T14:01:01.937Z/signin_cross_account.zip"
+              },
+              "Handler": "s_signin_cross_account.handler",
+              "Runtime": "python3.8",
+              "FunctionName": "lambdaauthorizer-dev-signin_cross_account",
+              "MemorySize": 1024,
+              "Timeout": 6,
+              "Role": {
+                "Fn::GetAtt": [
+                  "SigninUnderscorecrossUnderscoreaccountIamRoleLambdaExecution",
+                  "Arn"
+                ]
+              }
+            },
+            "DependsOn": [
+              "SigninUnderscorecrossUnderscoreaccountIamRoleLambdaExecution",
+              "SigninUnderscorecrossUnderscoreaccountLogGroup"
+            ]
+          },
+          "SigninUnderscoreopenidLambdaFunction": {
+            "Type": "AWS::Lambda::Function",
+            "Properties": {
+              "Code": {
+                "S3Bucket": {
+                  "Ref": "ServerlessDeploymentBucket"
+                },
+                "S3Key": "serverless/lambdaauthorizer/dev/1614866461937-2021-03-04T14:01:01.937Z/signin_openid.zip"
+              },
+              "Handler": "s_signin_openid.handler",
+              "Runtime": "python3.8",
+              "FunctionName": "lambdaauthorizer-dev-signin_openid",
+              "MemorySize": 1024,
+              "Timeout": 6,
+              "Role": {
+                "Fn::GetAtt": [
+                  "SigninUnderscoreopenidIamRoleLambdaExecution",
+                  "Arn"
+                ]
+              }
+            },
+            "DependsOn": [
+              "SigninUnderscoreopenidIamRoleLambdaExecution",
+              "SigninUnderscoreopenidLogGroup"
+            ]
+          },
           "SignupLambdaFunction": {
             "Type": "AWS::Lambda::Function",
             "Properties": {
@@ -283,7 +359,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/lambdaauthorizer/dev/1613434857274-2021-02-16T00:20:57.274Z/signup.zip"
+                "S3Key": "serverless/lambdaauthorizer/dev/1614866461937-2021-03-04T14:01:01.937Z/signup.zip"
               },
               "Handler": "s_signup.handler",
               "Runtime": "python3.8",
@@ -309,7 +385,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/lambdaauthorizer/dev/1613434857274-2021-02-16T00:20:57.274Z/servicio.zip"
+                "S3Key": "serverless/lambdaauthorizer/dev/1614866461937-2021-03-04T14:01:01.937Z/servicio.zip"
               },
               "Handler": "s_servicio.handler",
               "Runtime": "python3.8",
@@ -334,7 +410,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/lambdaauthorizer/dev/1613434857274-2021-02-16T00:20:57.274Z/lambda_authorizer.zip"
+                "S3Key": "serverless/lambdaauthorizer/dev/1614866461937-2021-03-04T14:01:01.937Z/lambda_authorizer.zip"
               },
               "Handler": "s_lambda_authorizer.handler",
               "Runtime": "python3.8",
@@ -352,44 +428,64 @@
               "LambdaUnderscoreauthorizerLogGroup"
             ]
           },
-          "SigninLambdaVersionT93Z2jGSQQT3qE7f6TO9hbLty6Fz0lCtIhyIPEMj3Q": {
+          "SigninLambdaVersionyoFTpWOYm16b17WE9HPYFkh3CQI4UjZDfCDDdJhTVM0": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "SigninLambdaFunction"
               },
-              "CodeSha256": "yBk5QlXw36RN79kuFkBHGNN8R815ynJj/KdSw3eiWpY="
+              "CodeSha256": "kW4/GgFh+MK0dNRJNEghcWr8ix/fBe9FHJBuInKCtEc="
             }
           },
-          "SignupLambdaVersioncgqe0MYq4GqNcQ77mhjyVnSd8i6ebrQL4XZPS4FGCdc": {
+          "SigninUnderscorecrossUnderscoreaccountLambdaVersion4cUaelM1T60DVoT0zFadHRMXRKCjGsol0zCrgTw1M": {
+            "Type": "AWS::Lambda::Version",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+              "FunctionName": {
+                "Ref": "SigninUnderscorecrossUnderscoreaccountLambdaFunction"
+              },
+              "CodeSha256": "kW4/GgFh+MK0dNRJNEghcWr8ix/fBe9FHJBuInKCtEc="
+            }
+          },
+          "SignupLambdaVersionTmQvKI8hoXojb2z1JrbwhdoDCw49rSO910dJNVwdLrM": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "SignupLambdaFunction"
               },
-              "CodeSha256": "yBk5QlXw36RN79kuFkBHGNN8R815ynJj/KdSw3eiWpY="
+              "CodeSha256": "kW4/GgFh+MK0dNRJNEghcWr8ix/fBe9FHJBuInKCtEc="
             }
           },
-          "ServicioLambdaVersionLNIEPcgJtagUB7VVfkstjipzhkqODCFq9ouMu5iJU": {
+          "SigninUnderscoreopenidLambdaVersionRx54tV0jYCLXQqniXRqN1zeYjUxSmfIuCps76jGk": {
+            "Type": "AWS::Lambda::Version",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+              "FunctionName": {
+                "Ref": "SigninUnderscoreopenidLambdaFunction"
+              },
+              "CodeSha256": "kW4/GgFh+MK0dNRJNEghcWr8ix/fBe9FHJBuInKCtEc="
+            }
+          },
+          "ServicioLambdaVersion3DxrfnNtWHeEF4JN5uOfASMtsmuaacyJjddQhIzZIFE": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "ServicioLambdaFunction"
               },
-              "CodeSha256": "yBk5QlXw36RN79kuFkBHGNN8R815ynJj/KdSw3eiWpY="
+              "CodeSha256": "kW4/GgFh+MK0dNRJNEghcWr8ix/fBe9FHJBuInKCtEc="
             }
           },
-          "LambdaUnderscoreauthorizerLambdaVersion43Kl3KBEiIBwxqdeYkrRWcykvTZAHNB3JSOfT7ksCc": {
+          "LambdaUnderscoreauthorizerLambdaVersionhnFO3YGikKgDWM9TaClkvj0VoVWscK6QFYj9w7Ods": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "LambdaUnderscoreauthorizerLambdaFunction"
               },
-              "CodeSha256": "yBk5QlXw36RN79kuFkBHGNN8R815ynJj/KdSw3eiWpY="
+              "CodeSha256": "kW4/GgFh+MK0dNRJNEghcWr8ix/fBe9FHJBuInKCtEc="
             }
           },
           "ApiGatewayRestApi": {
@@ -414,6 +510,36 @@
                 ]
               },
               "PathPart": "signin",
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              }
+            }
+          },
+          "ApiGatewayResourceSignincrossaccount": {
+            "Type": "AWS::ApiGateway::Resource",
+            "Properties": {
+              "ParentId": {
+                "Fn::GetAtt": [
+                  "ApiGatewayRestApi",
+                  "RootResourceId"
+                ]
+              },
+              "PathPart": "signin_crossaccount",
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              }
+            }
+          },
+          "ApiGatewayResourceSigninopenid": {
+            "Type": "AWS::ApiGateway::Resource",
+            "Properties": {
+              "ParentId": {
+                "Fn::GetAtt": [
+                  "ApiGatewayRestApi",
+                  "RootResourceId"
+                ]
+              },
+              "PathPart": "signin_openid",
               "RestApiId": {
                 "Ref": "ApiGatewayRestApi"
               }
@@ -481,6 +607,92 @@
                       {
                         "Fn::GetAtt": [
                           "SigninLambdaFunction",
+                          "Arn"
+                        ]
+                      },
+                      "/invocations"
+                    ]
+                  ]
+                }
+              },
+              "MethodResponses": []
+            }
+          },
+          "ApiGatewayMethodSignincrossaccountPost": {
+            "Type": "AWS::ApiGateway::Method",
+            "Properties": {
+              "HttpMethod": "POST",
+              "RequestParameters": {},
+              "ResourceId": {
+                "Ref": "ApiGatewayResourceSignincrossaccount"
+              },
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "ApiKeyRequired": false,
+              "AuthorizationType": "NONE",
+              "Integration": {
+                "IntegrationHttpMethod": "POST",
+                "Type": "AWS_PROXY",
+                "Uri": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":apigateway:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":lambda:path/2015-03-31/functions/",
+                      {
+                        "Fn::GetAtt": [
+                          "SigninUnderscorecrossUnderscoreaccountLambdaFunction",
+                          "Arn"
+                        ]
+                      },
+                      "/invocations"
+                    ]
+                  ]
+                }
+              },
+              "MethodResponses": []
+            }
+          },
+          "ApiGatewayMethodSigninopenidPost": {
+            "Type": "AWS::ApiGateway::Method",
+            "Properties": {
+              "HttpMethod": "POST",
+              "RequestParameters": {},
+              "ResourceId": {
+                "Ref": "ApiGatewayResourceSigninopenid"
+              },
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "ApiKeyRequired": false,
+              "AuthorizationType": "NONE",
+              "Integration": {
+                "IntegrationHttpMethod": "POST",
+                "Type": "AWS_PROXY",
+                "Uri": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":apigateway:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":lambda:path/2015-03-31/functions/",
+                      {
+                        "Fn::GetAtt": [
+                          "SigninUnderscoreopenidLambdaFunction",
                           "Arn"
                         ]
                       },
@@ -616,7 +828,7 @@
               "Type": "TOKEN"
             }
           },
-          "ApiGatewayDeployment1613434817628": {
+          "ApiGatewayDeployment1614866455940": {
             "Type": "AWS::ApiGateway::Deployment",
             "Properties": {
               "RestApiId": {
@@ -626,6 +838,8 @@
             },
             "DependsOn": [
               "ApiGatewayMethodSigninPost",
+              "ApiGatewayMethodSignincrossaccountPost",
+              "ApiGatewayMethodSigninopenidPost",
               "ApiGatewayMethodSignupPost",
               "ApiGatewayMethodServicioGet"
             ]
@@ -636,6 +850,80 @@
               "FunctionName": {
                 "Fn::GetAtt": [
                   "SigninLambdaFunction",
+                  "Arn"
+                ]
+              },
+              "Action": "lambda:InvokeFunction",
+              "Principal": "apigateway.amazonaws.com",
+              "SourceArn": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition"
+                    },
+                    ":execute-api:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId"
+                    },
+                    ":",
+                    {
+                      "Ref": "ApiGatewayRestApi"
+                    },
+                    "/*/*"
+                  ]
+                ]
+              }
+            }
+          },
+          "SigninUnderscorecrossUnderscoreaccountLambdaPermissionApiGateway": {
+            "Type": "AWS::Lambda::Permission",
+            "Properties": {
+              "FunctionName": {
+                "Fn::GetAtt": [
+                  "SigninUnderscorecrossUnderscoreaccountLambdaFunction",
+                  "Arn"
+                ]
+              },
+              "Action": "lambda:InvokeFunction",
+              "Principal": "apigateway.amazonaws.com",
+              "SourceArn": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition"
+                    },
+                    ":execute-api:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId"
+                    },
+                    ":",
+                    {
+                      "Ref": "ApiGatewayRestApi"
+                    },
+                    "/*/*"
+                  ]
+                ]
+              }
+            }
+          },
+          "SigninUnderscoreopenidLambdaPermissionApiGateway": {
+            "Type": "AWS::Lambda::Permission",
+            "Properties": {
+              "FunctionName": {
+                "Fn::GetAtt": [
+                  "SigninUnderscoreopenidLambdaFunction",
                   "Arn"
                 ]
               },
@@ -887,7 +1175,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/lambdaauthorizer/dev/1613434857274-2021-02-16T00:20:57.274Z/custom-resources.zip"
+                "S3Key": "serverless/lambdaauthorizer/dev/1614866461937-2021-03-04T14:01:01.937Z/custom-resources.zip"
               },
               "FunctionName": "lambdaauthorizer-dev-custom-resource-apigw-cw-role",
               "Handler": "apiGatewayCloudWatchRole/handler.handler",
@@ -964,21 +1252,14 @@
                         "Action": [
                           "cognito-idp:AdminInitiateAuth"
                         ],
-                        "Resource": "arn:aws:cognito-idp:us-east-1:220228648715:userpool/us-east-1_NsKXmRvr9"
-                      },
-                      {
-                        "Effect": "Allow",
-                        "Action": [
-                          "cognito-idp:AdminInitiateAuth"
-                        ],
-                        "Resource": "arn:aws:cognito-idp:us-east-1:409044723547:userpool/us-east-1_h6iqBsTk4"
-                      },
-                      {
-                        "Effect": "Allow",
-                        "Action": [
-                          "cognito-idp:AdminInitiateAuth"
-                        ],
                         "Resource": "arn:aws:cognito-idp:us-east-1:323413004057:userpool/us-east-1_cYinjitZ1"
+                      },
+                      {
+                        "Effect": "Allow",
+                        "Action": [
+                          "cognito-idp:AdminInitiateAuth"
+                        ],
+                        "Resource": "arn:aws:cognito-idp:us-east-1:323413004057:userpool/us-east-1_jPZT35kha"
                       }
                     ]
                   }
@@ -992,6 +1273,172 @@
                     "lambdaauthorizer",
                     "dev",
                     "signin",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    "lambdaRole"
+                  ]
+                ]
+              },
+              "ManagedPolicyArns": []
+            }
+          },
+          "SigninUnderscorecrossUnderscoreaccountIamRoleLambdaExecution": {
+            "Type": "AWS::IAM::Role",
+            "Properties": {
+              "AssumeRolePolicyDocument": {
+                "Version": "2012-10-17",
+                "Statement": [
+                  {
+                    "Effect": "Allow",
+                    "Principal": {
+                      "Service": [
+                        "lambda.amazonaws.com"
+                      ]
+                    },
+                    "Action": [
+                      "sts:AssumeRole"
+                    ]
+                  }
+                ]
+              },
+              "Policies": [
+                {
+                  "PolicyName": {
+                    "Fn::Join": [
+                      "-",
+                      [
+                        "lambdaauthorizer",
+                        "dev",
+                        "lambda"
+                      ]
+                    ]
+                  },
+                  "PolicyDocument": {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                      {
+                        "Effect": "Allow",
+                        "Action": [
+                          "logs:CreateLogStream",
+                          "logs:CreateLogGroup",
+                          "logs:PutLogEvents"
+                        ],
+                        "Resource": [
+                          {
+                            "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/lambdaauthorizer-dev-signin_cross_account:*:*"
+                          }
+                        ]
+                      },
+                      {
+                        "Effect": "Allow",
+                        "Action": [
+                          "cognito-idp:AdminInitiateAuth"
+                        ],
+                        "Resource": "arn:aws:cognito-idp:us-east-1:323413004057:userpool/us-east-1_jCOnOGPsz"
+                      },
+                      {
+                        "Effect": "Allow",
+                        "Action": [
+                          "sts:AssumeRole"
+                        ],
+                        "Resource": "arn:aws:iam::220228648715:role/externalAuthorization"
+                      },
+                      {
+                        "Effect": "Allow",
+                        "Action": [
+                          "sts:AssumeRole"
+                        ],
+                        "Resource": "arn:aws:iam::409044723547:role/externalAuthorization"
+                      }
+                    ]
+                  }
+                }
+              ],
+              "Path": "/",
+              "RoleName": {
+                "Fn::Join": [
+                  "-",
+                  [
+                    "lambdaauthorizer",
+                    "dev",
+                    "signin_cross_account",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    "lambdaRole"
+                  ]
+                ]
+              },
+              "ManagedPolicyArns": []
+            }
+          },
+          "SigninUnderscoreopenidIamRoleLambdaExecution": {
+            "Type": "AWS::IAM::Role",
+            "Properties": {
+              "AssumeRolePolicyDocument": {
+                "Version": "2012-10-17",
+                "Statement": [
+                  {
+                    "Effect": "Allow",
+                    "Principal": {
+                      "Service": [
+                        "lambda.amazonaws.com"
+                      ]
+                    },
+                    "Action": [
+                      "sts:AssumeRole"
+                    ]
+                  }
+                ]
+              },
+              "Policies": [
+                {
+                  "PolicyName": {
+                    "Fn::Join": [
+                      "-",
+                      [
+                        "lambdaauthorizer",
+                        "dev",
+                        "lambda"
+                      ]
+                    ]
+                  },
+                  "PolicyDocument": {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                      {
+                        "Effect": "Allow",
+                        "Action": [
+                          "logs:CreateLogStream",
+                          "logs:CreateLogGroup",
+                          "logs:PutLogEvents"
+                        ],
+                        "Resource": [
+                          {
+                            "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/lambdaauthorizer-dev-signin_openid:*:*"
+                          }
+                        ]
+                      },
+                      {
+                        "Effect": "Allow",
+                        "Action": [
+                          "cognito-idp:AdminInitiateAuth"
+                        ],
+                        "Resource": "arn:aws:cognito-idp:us-east-1:323413004057:userpool/us-east-1_jPZT35kha"
+                      }
+                    ]
+                  }
+                }
+              ],
+              "Path": "/",
+              "RoleName": {
+                "Fn::Join": [
+                  "-",
+                  [
+                    "lambdaauthorizer",
+                    "dev",
+                    "signin_openid",
                     {
                       "Ref": "AWS::Region"
                     },
@@ -1063,23 +1510,15 @@
                           "cognito-idp:AdminInitiateAuth",
                           "cognito-idp:AdminCreateUser"
                         ],
-                        "Resource": "arn:aws:cognito-idp:us-east-1:220228648715:userpool/us-east-1_NsKXmRvr9"
-                      },
-                      {
-                        "Effect": "Allow",
-                        "Action": [
-                          "cognito-idp:AdminInitiateAuth",
-                          "cognito-idp:AdminCreateUser"
-                        ],
-                        "Resource": "arn:aws:cognito-idp:us-east-1:409044723547:userpool/us-east-1_h6iqBsTk4"
-                      },
-                      {
-                        "Effect": "Allow",
-                        "Action": [
-                          "cognito-idp:AdminInitiateAuth",
-                          "cognito-idp:AdminCreateUser"
-                        ],
                         "Resource": "arn:aws:cognito-idp:us-east-1:323413004057:userpool/us-east-1_cYinjitZ1"
+                      },
+                      {
+                        "Effect": "Allow",
+                        "Action": [
+                          "cognito-idp:AdminInitiateAuth",
+                          "cognito-idp:AdminCreateUser"
+                        ],
+                        "Resource": "arn:aws:cognito-idp:us-east-1:323413004057:userpool/us-east-1_jPZT35kha"
                       }
                     ]
                   }
@@ -1110,6 +1549,26 @@
               "FilterPattern": "?\"REPORT RequestId: \" ?\"SERVERLESS_ENTERPRISE\"",
               "LogGroupName": {
                 "Ref": "SigninLogGroup"
+              }
+            }
+          },
+          "CloudWatchLogsSubscriptionFilterSigninUnderscorecrossUnderscoreaccountLogGroup": {
+            "Type": "AWS::Logs::SubscriptionFilter",
+            "Properties": {
+              "DestinationArn": "arn:aws:logs:us-east-1:802587217904:destination:2NZSbkGJ39bZBtX8ww#62DdtGrLcHDkTlVSlW#lambdaauthorizer#dev",
+              "FilterPattern": "?\"REPORT RequestId: \" ?\"SERVERLESS_ENTERPRISE\"",
+              "LogGroupName": {
+                "Ref": "SigninUnderscorecrossUnderscoreaccountLogGroup"
+              }
+            }
+          },
+          "CloudWatchLogsSubscriptionFilterSigninUnderscoreopenidLogGroup": {
+            "Type": "AWS::Logs::SubscriptionFilter",
+            "Properties": {
+              "DestinationArn": "arn:aws:logs:us-east-1:802587217904:destination:2NZSbkGJ39bZBtX8ww#62DdtGrLcHDkTlVSlW#lambdaauthorizer#dev",
+              "FilterPattern": "?\"REPORT RequestId: \" ?\"SERVERLESS_ENTERPRISE\"",
+              "LogGroupName": {
+                "Ref": "SigninUnderscoreopenidLogGroup"
               }
             }
           },
@@ -1171,25 +1630,37 @@
           "SigninLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "SigninLambdaVersionT93Z2jGSQQT3qE7f6TO9hbLty6Fz0lCtIhyIPEMj3Q"
+              "Ref": "SigninLambdaVersionyoFTpWOYm16b17WE9HPYFkh3CQI4UjZDfCDDdJhTVM0"
+            }
+          },
+          "SigninUnderscorecrossUnderscoreaccountLambdaFunctionQualifiedArn": {
+            "Description": "Current Lambda function version",
+            "Value": {
+              "Ref": "SigninUnderscorecrossUnderscoreaccountLambdaVersion4cUaelM1T60DVoT0zFadHRMXRKCjGsol0zCrgTw1M"
             }
           },
           "SignupLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "SignupLambdaVersioncgqe0MYq4GqNcQ77mhjyVnSd8i6ebrQL4XZPS4FGCdc"
+              "Ref": "SignupLambdaVersionTmQvKI8hoXojb2z1JrbwhdoDCw49rSO910dJNVwdLrM"
+            }
+          },
+          "SigninUnderscoreopenidLambdaFunctionQualifiedArn": {
+            "Description": "Current Lambda function version",
+            "Value": {
+              "Ref": "SigninUnderscoreopenidLambdaVersionRx54tV0jYCLXQqniXRqN1zeYjUxSmfIuCps76jGk"
             }
           },
           "ServicioLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "ServicioLambdaVersionLNIEPcgJtagUB7VVfkstjipzhkqODCFq9ouMu5iJU"
+              "Ref": "ServicioLambdaVersion3DxrfnNtWHeEF4JN5uOfASMtsmuaacyJjddQhIzZIFE"
             }
           },
           "LambdaUnderscoreauthorizerLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "LambdaUnderscoreauthorizerLambdaVersion43Kl3KBEiIBwxqdeYkrRWcykvTZAHNB3JSOfT7ksCc"
+              "Ref": "LambdaUnderscoreauthorizerLambdaVersionhnFO3YGikKgDWM9TaClkvj0VoVWscK6QFYj9w7Ods"
             }
           },
           "ServiceEndpoint": {
@@ -1332,9 +1803,6 @@
           },
           {
             "$ref": "$[\"service\"][\"provider\"][\"compiledCloudFormationTemplate\"][\"Resources\"][\"SigninIamRoleLambdaExecution\"][\"Properties\"][\"Policies\"][0][\"PolicyDocument\"][\"Statement\"][3]"
-          },
-          {
-            "$ref": "$[\"service\"][\"provider\"][\"compiledCloudFormationTemplate\"][\"Resources\"][\"SigninIamRoleLambdaExecution\"][\"Properties\"][\"Policies\"][0][\"PolicyDocument\"][\"Statement\"][4]"
           }
         ],
         "name": "lambdaauthorizer-dev-signin",
@@ -1344,13 +1812,81 @@
             "s_signin.py",
             "serverless_sdk/**"
           ],
-          "artifact": "/home/jhtobav/Documents/workspace/DCM/MultipleCognitoPOC/lambdaAuthorizer/.serverless/signin.zip"
+          "artifact": "/home/jhtobav/Documents/workspace/aws-POCs/Cognito/MultipleCognitoPOC/lambdaAuthorizer/.serverless/signin.zip"
         },
         "memory": 1024,
         "timeout": 6,
         "runtime": "python3.8",
         "vpc": {},
-        "versionLogicalId": "SigninLambdaVersionT93Z2jGSQQT3qE7f6TO9hbLty6Fz0lCtIhyIPEMj3Q"
+        "versionLogicalId": "SigninLambdaVersionyoFTpWOYm16b17WE9HPYFkh3CQI4UjZDfCDDdJhTVM0"
+      },
+      "signin_cross_account": {
+        "handler": "s_signin_cross_account.handler",
+        "events": [
+          {
+            "http": {
+              "path": "signin_crossaccount",
+              "method": "post",
+              "integration": "AWS_PROXY"
+            }
+          }
+        ],
+        "iamRoleStatements": [
+          {
+            "$ref": "$[\"service\"][\"provider\"][\"compiledCloudFormationTemplate\"][\"Resources\"][\"SigninUnderscorecrossUnderscoreaccountIamRoleLambdaExecution\"][\"Properties\"][\"Policies\"][0][\"PolicyDocument\"][\"Statement\"][1]"
+          },
+          {
+            "$ref": "$[\"service\"][\"provider\"][\"compiledCloudFormationTemplate\"][\"Resources\"][\"SigninUnderscorecrossUnderscoreaccountIamRoleLambdaExecution\"][\"Properties\"][\"Policies\"][0][\"PolicyDocument\"][\"Statement\"][2]"
+          },
+          {
+            "$ref": "$[\"service\"][\"provider\"][\"compiledCloudFormationTemplate\"][\"Resources\"][\"SigninUnderscorecrossUnderscoreaccountIamRoleLambdaExecution\"][\"Properties\"][\"Policies\"][0][\"PolicyDocument\"][\"Statement\"][3]"
+          }
+        ],
+        "name": "lambdaauthorizer-dev-signin_cross_account",
+        "module": ".",
+        "package": {
+          "include": [
+            "s_signin_cross_account.py",
+            "serverless_sdk/**"
+          ],
+          "artifact": "/home/jhtobav/Documents/workspace/aws-POCs/Cognito/MultipleCognitoPOC/lambdaAuthorizer/.serverless/signin_cross_account.zip"
+        },
+        "memory": 1024,
+        "timeout": 6,
+        "runtime": "python3.8",
+        "vpc": {},
+        "versionLogicalId": "SigninUnderscorecrossUnderscoreaccountLambdaVersion4cUaelM1T60DVoT0zFadHRMXRKCjGsol0zCrgTw1M"
+      },
+      "signin_openid": {
+        "handler": "s_signin_openid.handler",
+        "events": [
+          {
+            "http": {
+              "path": "signin_openid",
+              "method": "post",
+              "integration": "AWS_PROXY"
+            }
+          }
+        ],
+        "iamRoleStatements": [
+          {
+            "$ref": "$[\"service\"][\"provider\"][\"compiledCloudFormationTemplate\"][\"Resources\"][\"SigninUnderscoreopenidIamRoleLambdaExecution\"][\"Properties\"][\"Policies\"][0][\"PolicyDocument\"][\"Statement\"][1]"
+          }
+        ],
+        "name": "lambdaauthorizer-dev-signin_openid",
+        "module": ".",
+        "package": {
+          "include": [
+            "s_signin_openid.py",
+            "serverless_sdk/**"
+          ],
+          "artifact": "/home/jhtobav/Documents/workspace/aws-POCs/Cognito/MultipleCognitoPOC/lambdaAuthorizer/.serverless/signin_openid.zip"
+        },
+        "memory": 1024,
+        "timeout": 6,
+        "runtime": "python3.8",
+        "vpc": {},
+        "versionLogicalId": "SigninUnderscoreopenidLambdaVersionRx54tV0jYCLXQqniXRqN1zeYjUxSmfIuCps76jGk"
       },
       "signup": {
         "handler": "s_signup.handler",
@@ -1372,9 +1908,6 @@
           },
           {
             "$ref": "$[\"service\"][\"provider\"][\"compiledCloudFormationTemplate\"][\"Resources\"][\"SignupIamRoleLambdaExecution\"][\"Properties\"][\"Policies\"][0][\"PolicyDocument\"][\"Statement\"][3]"
-          },
-          {
-            "$ref": "$[\"service\"][\"provider\"][\"compiledCloudFormationTemplate\"][\"Resources\"][\"SignupIamRoleLambdaExecution\"][\"Properties\"][\"Policies\"][0][\"PolicyDocument\"][\"Statement\"][4]"
           }
         ],
         "name": "lambdaauthorizer-dev-signup",
@@ -1384,13 +1917,13 @@
             "s_signup.py",
             "serverless_sdk/**"
           ],
-          "artifact": "/home/jhtobav/Documents/workspace/DCM/MultipleCognitoPOC/lambdaAuthorizer/.serverless/signup.zip"
+          "artifact": "/home/jhtobav/Documents/workspace/aws-POCs/Cognito/MultipleCognitoPOC/lambdaAuthorizer/.serverless/signup.zip"
         },
         "memory": 1024,
         "timeout": 6,
         "runtime": "python3.8",
         "vpc": {},
-        "versionLogicalId": "SignupLambdaVersioncgqe0MYq4GqNcQ77mhjyVnSd8i6ebrQL4XZPS4FGCdc"
+        "versionLogicalId": "SignupLambdaVersionTmQvKI8hoXojb2z1JrbwhdoDCw49rSO910dJNVwdLrM"
       },
       "servicio": {
         "handler": "s_servicio.handler",
@@ -1418,13 +1951,13 @@
             "s_servicio.py",
             "serverless_sdk/**"
           ],
-          "artifact": "/home/jhtobav/Documents/workspace/DCM/MultipleCognitoPOC/lambdaAuthorizer/.serverless/servicio.zip"
+          "artifact": "/home/jhtobav/Documents/workspace/aws-POCs/Cognito/MultipleCognitoPOC/lambdaAuthorizer/.serverless/servicio.zip"
         },
         "memory": 1024,
         "timeout": 6,
         "runtime": "python3.8",
         "vpc": {},
-        "versionLogicalId": "ServicioLambdaVersionLNIEPcgJtagUB7VVfkstjipzhkqODCFq9ouMu5iJU"
+        "versionLogicalId": "ServicioLambdaVersion3DxrfnNtWHeEF4JN5uOfASMtsmuaacyJjddQhIzZIFE"
       },
       "lambda_authorizer": {
         "handler": "s_lambda_authorizer.handler",
@@ -1436,13 +1969,13 @@
             "s_lambda_authorizer.py",
             "serverless_sdk/**"
           ],
-          "artifact": "/home/jhtobav/Documents/workspace/DCM/MultipleCognitoPOC/lambdaAuthorizer/.serverless/lambda_authorizer.zip"
+          "artifact": "/home/jhtobav/Documents/workspace/aws-POCs/Cognito/MultipleCognitoPOC/lambdaAuthorizer/.serverless/lambda_authorizer.zip"
         },
         "memory": 1024,
         "timeout": 6,
         "runtime": "python3.8",
         "vpc": {},
-        "versionLogicalId": "LambdaUnderscoreauthorizerLambdaVersion43Kl3KBEiIBwxqdeYkrRWcykvTZAHNB3JSOfT7ksCc"
+        "versionLogicalId": "LambdaUnderscoreauthorizerLambdaVersionhnFO3YGikKgDWM9TaClkvj0VoVWscK6QFYj9w7Ods"
       }
     },
     "configValidationMode": "warn",
@@ -1471,7 +2004,7 @@
           ".vscode/**",
           ".idea/**"
         ],
-        "artifactDirectoryName": "serverless/lambdaauthorizer/dev/1613434857274-2021-02-16T00:20:57.274Z"
+        "artifactDirectoryName": "serverless/lambdaauthorizer/dev/1614866461937-2021-03-04T14:01:01.937Z"
       },
       "functions": {
         "$ref": "$[\"service\"][\"functions\"]"
@@ -1484,7 +2017,7 @@
   },
   "package": {
     "individually": true,
-    "artifactDirectoryName": "serverless/lambdaauthorizer/dev/1613434857274-2021-02-16T00:20:57.274Z",
+    "artifactDirectoryName": "serverless/lambdaauthorizer/dev/1614866461937-2021-03-04T14:01:01.937Z",
     "artifact": ""
   }
 }

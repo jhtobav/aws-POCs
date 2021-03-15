@@ -36,15 +36,41 @@ functions:
       - Effect: "Allow"
         Action:
           - "cognito-idp:AdminInitiateAuth"
-        Resource: "arn:aws:cognito-idp:us-east-1:220228648715:userpool/us-east-1_NsKXmRvr9"
-      - Effect: "Allow"
-        Action:
-          - "cognito-idp:AdminInitiateAuth"
-        Resource: "arn:aws:cognito-idp:us-east-1:409044723547:userpool/us-east-1_h6iqBsTk4"
-      - Effect: "Allow"
-        Action:
-          - "cognito-idp:AdminInitiateAuth"
         Resource: "arn:aws:cognito-idp:us-east-1:323413004057:userpool/us-east-1_cYinjitZ1"
+      - Effect: "Allow"
+        Action:
+          - "cognito-idp:AdminInitiateAuth"
+        Resource: "arn:aws:cognito-idp:us-east-1:323413004057:userpool/us-east-1_jPZT35kha"
+  signin_cross_account:
+    handler: signin_cross_account.signin_cross_account
+    events:
+      - http:
+          path: signin_crossaccount
+          method: post
+    iamRoleStatements:
+      - Effect: "Allow"
+        Action:
+          - "cognito-idp:AdminInitiateAuth"
+        Resource: "arn:aws:cognito-idp:us-east-1:323413004057:userpool/us-east-1_jCOnOGPsz"
+      - Effect: "Allow"
+        Action:
+          - "sts:AssumeRole"
+        Resource: "arn:aws:iam::220228648715:role/externalAuthorization"
+      - Effect: "Allow"
+        Action:
+          - "sts:AssumeRole"
+        Resource: "arn:aws:iam::409044723547:role/externalAuthorization"
+  signin_openid:
+    handler: signin_openid.signin_openid
+    events:
+      - http:
+          path: signin_openid
+          method: post
+    iamRoleStatements:
+      - Effect: "Allow"
+        Action:
+          - "cognito-idp:AdminInitiateAuth"
+        Resource: "arn:aws:cognito-idp:us-east-1:323413004057:userpool/us-east-1_jPZT35kha"
   signup:
     handler: signup.sign_up
     events:
@@ -61,17 +87,12 @@ functions:
         Action:
           - "cognito-idp:AdminInitiateAuth"
           - "cognito-idp:AdminCreateUser"
-        Resource: "arn:aws:cognito-idp:us-east-1:220228648715:userpool/us-east-1_NsKXmRvr9"
-      - Effect: "Allow"
-        Action:
-          - "cognito-idp:AdminInitiateAuth"
-          - "cognito-idp:AdminCreateUser"
-        Resource: "arn:aws:cognito-idp:us-east-1:409044723547:userpool/us-east-1_h6iqBsTk4"
-      - Effect: "Allow"
-        Action:
-          - "cognito-idp:AdminInitiateAuth"
-          - "cognito-idp:AdminCreateUser"
         Resource: "arn:aws:cognito-idp:us-east-1:323413004057:userpool/us-east-1_cYinjitZ1"
+      - Effect: "Allow"
+        Action:
+          - "cognito-idp:AdminInitiateAuth"
+          - "cognito-idp:AdminCreateUser"
+        Resource: "arn:aws:cognito-idp:us-east-1:323413004057:userpool/us-east-1_jPZT35kha"
   servicio:
     handler: servicio.servicio
     events:

@@ -127,3 +127,12 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# nodejs
+node_modules/
+
+# serverless
+.serverless/
+
+# vscode
+.vscode/

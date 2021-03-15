@@ -89,6 +89,12 @@
         "LogGroupName": "/aws/lambda/crossaccountcognito-dev-servicio"
       }
     },
+    "ServicioUnderscoreopenidLogGroup": {
+      "Type": "AWS::Logs::LogGroup",
+      "Properties": {
+        "LogGroupName": "/aws/lambda/crossaccountcognito-dev-servicio_openid"
+      }
+    },
     "IamRoleLambdaExecution": {
       "Type": "AWS::IAM::Role",
       "Properties": {
@@ -215,6 +221,12 @@
                         "ServicioLogGroup",
                         "Arn"
                       ]
+                    },
+                    {
+                      "Fn::GetAtt": [
+                        "ServicioUnderscoreopenidLogGroup",
+                        "Arn"
+                      ]
                     }
                   ]
                 }
@@ -231,7 +243,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/crossaccountcognito/dev/1613433487101-2021-02-15T23:58:07.101Z/signin.zip"
+          "S3Key": "serverless/crossaccountcognito/dev/1615329001857-2021-03-09T22:30:01.857Z/signin.zip"
         },
         "Handler": "s_signin.handler",
         "Runtime": "python3.8",
@@ -257,7 +269,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/crossaccountcognito/dev/1613433487101-2021-02-15T23:58:07.101Z/signup.zip"
+          "S3Key": "serverless/crossaccountcognito/dev/1615329001857-2021-03-09T22:30:01.857Z/signup.zip"
         },
         "Handler": "s_signup.handler",
         "Runtime": "python3.8",
@@ -283,7 +295,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/crossaccountcognito/dev/1613433487101-2021-02-15T23:58:07.101Z/servicio.zip"
+          "S3Key": "serverless/crossaccountcognito/dev/1615329001857-2021-03-09T22:30:01.857Z/servicio.zip"
         },
         "Handler": "s_servicio.handler",
         "Runtime": "python3.8",
@@ -301,34 +313,69 @@
         "ServicioLogGroup"
       ]
     },
-    "SigninLambdaVersionnSUYcQRgjM1ucyHZwPdPkuABzqz6UPBihXqnwPHl0Mg": {
+    "ServicioUnderscoreopenidLambdaFunction": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Ref": "ServerlessDeploymentBucket"
+          },
+          "S3Key": "serverless/crossaccountcognito/dev/1615329001857-2021-03-09T22:30:01.857Z/servicio_openid.zip"
+        },
+        "Handler": "s_servicio_openid.handler",
+        "Runtime": "python3.8",
+        "FunctionName": "crossaccountcognito-dev-servicio_openid",
+        "MemorySize": 1024,
+        "Timeout": 6,
+        "Role": {
+          "Fn::GetAtt": [
+            "IamRoleLambdaExecution",
+            "Arn"
+          ]
+        }
+      },
+      "DependsOn": [
+        "ServicioUnderscoreopenidLogGroup"
+      ]
+    },
+    "SigninLambdaVersionNaoyUPnlqt7qDBWGGQQVh9lxT8M2U9J2VuUB6hMyAg": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "SigninLambdaFunction"
         },
-        "CodeSha256": "5wrMSfM/UdeAYNQTvyTwzfxJJC9wFtlZn6mSk0hn5rw="
+        "CodeSha256": "5MCPuZy7DeVuYhn4gX29jFP70P/mnqgBZMiQDC0xFP4="
       }
     },
-    "SignupLambdaVersionjuTew4dYnKqiGmn0PYtl7O63IBxPyYbqBQsruX2sqk": {
-      "Type": "AWS::Lambda::Version",
-      "DeletionPolicy": "Retain",
-      "Properties": {
-        "FunctionName": {
-          "Ref": "SignupLambdaFunction"
-        },
-        "CodeSha256": "5wrMSfM/UdeAYNQTvyTwzfxJJC9wFtlZn6mSk0hn5rw="
-      }
-    },
-    "ServicioLambdaVersionTN49Po6mLaMIx7VDoNDEpMeS2JYpffe6bvHFbDew": {
+    "ServicioLambdaVersionaNp1DFAtqL3dPPqRrdhaSAWJN2sfrRKJ3a0qwML8QvA": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "ServicioLambdaFunction"
         },
-        "CodeSha256": "5wrMSfM/UdeAYNQTvyTwzfxJJC9wFtlZn6mSk0hn5rw="
+        "CodeSha256": "5MCPuZy7DeVuYhn4gX29jFP70P/mnqgBZMiQDC0xFP4="
+      }
+    },
+    "SignupLambdaVersionTFotsuWqB5JiD7O5fRq3eDVgSsKSDeW1ybRJj6ZZDHI": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "SignupLambdaFunction"
+        },
+        "CodeSha256": "5MCPuZy7DeVuYhn4gX29jFP70P/mnqgBZMiQDC0xFP4="
+      }
+    },
+    "ServicioUnderscoreopenidLambdaVersionN4PUBm3RclfMGEO9WeX9ovnJ0PVclT0MxDTA8YecuI8": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "ServicioUnderscoreopenidLambdaFunction"
+        },
+        "CodeSha256": "5MCPuZy7DeVuYhn4gX29jFP70P/mnqgBZMiQDC0xFP4="
       }
     },
     "ApiGatewayRestApi": {
@@ -383,6 +430,126 @@
           ]
         },
         "PathPart": "servicio",
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        }
+      }
+    },
+    "ApiGatewayResourceServicioopenid": {
+      "Type": "AWS::ApiGateway::Resource",
+      "Properties": {
+        "ParentId": {
+          "Fn::GetAtt": [
+            "ApiGatewayRestApi",
+            "RootResourceId"
+          ]
+        },
+        "PathPart": "servicio_openid",
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        }
+      }
+    },
+    "ApiGatewayResourceProxyVar": {
+      "Type": "AWS::ApiGateway::Resource",
+      "Properties": {
+        "ParentId": {
+          "Fn::GetAtt": [
+            "ApiGatewayRestApi",
+            "RootResourceId"
+          ]
+        },
+        "PathPart": "{proxy+}",
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        }
+      }
+    },
+    "ApiGatewayMethodServicioOptions": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "AuthorizationType": "NONE",
+        "HttpMethod": "OPTIONS",
+        "MethodResponses": [
+          {
+            "StatusCode": "200",
+            "ResponseParameters": {
+              "method.response.header.Access-Control-Allow-Origin": true,
+              "method.response.header.Access-Control-Allow-Headers": true,
+              "method.response.header.Access-Control-Allow-Methods": true
+            },
+            "ResponseModels": {}
+          }
+        ],
+        "RequestParameters": {},
+        "Integration": {
+          "Type": "MOCK",
+          "RequestTemplates": {
+            "application/json": "{statusCode:200}"
+          },
+          "ContentHandling": "CONVERT_TO_TEXT",
+          "IntegrationResponses": [
+            {
+              "StatusCode": "200",
+              "ResponseParameters": {
+                "method.response.header.Access-Control-Allow-Origin": "'*'",
+                "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'",
+                "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET'"
+              },
+              "ResponseTemplates": {
+                "application/json": "#set($origin = $input.params(\"Origin\"))\n#if($origin == \"\") #set($origin = $input.params(\"origin\")) #end\n#if($origin.matches(\".+\")) #set($context.responseOverride.header.Access-Control-Allow-Origin = $origin) #end"
+              }
+            }
+          ]
+        },
+        "ResourceId": {
+          "Ref": "ApiGatewayResourceServicio"
+        },
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        }
+      }
+    },
+    "ApiGatewayMethodProxyVarOptions": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "AuthorizationType": "NONE",
+        "HttpMethod": "OPTIONS",
+        "MethodResponses": [
+          {
+            "StatusCode": "200",
+            "ResponseParameters": {
+              "method.response.header.Access-Control-Allow-Origin": true,
+              "method.response.header.Access-Control-Allow-Headers": true,
+              "method.response.header.Access-Control-Allow-Methods": true
+            },
+            "ResponseModels": {}
+          }
+        ],
+        "RequestParameters": {},
+        "Integration": {
+          "Type": "MOCK",
+          "RequestTemplates": {
+            "application/json": "{statusCode:200}"
+          },
+          "ContentHandling": "CONVERT_TO_TEXT",
+          "IntegrationResponses": [
+            {
+              "StatusCode": "200",
+              "ResponseParameters": {
+                "method.response.header.Access-Control-Allow-Origin": "'*'",
+                "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'",
+                "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,DELETE,GET,HEAD,PATCH,POST,PUT'"
+              },
+              "ResponseTemplates": {
+                "application/json": "#set($origin = $input.params(\"Origin\"))\n#if($origin == \"\") #set($origin = $input.params(\"origin\")) #end\n#if($origin.matches(\".+\")) #set($context.responseOverride.header.Access-Control-Allow-Origin = $origin) #end"
+              }
+            }
+          ]
+        },
+        "ResourceId": {
+          "Ref": "ApiGatewayResourceProxyVar"
+        },
         "RestApiId": {
           "Ref": "ApiGatewayRestApi"
         }
@@ -520,7 +687,93 @@
         "MethodResponses": []
       }
     },
-    "ApiGatewayDeployment1613433477481": {
+    "ApiGatewayMethodServicioopenidGet": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "HttpMethod": "GET",
+        "RequestParameters": {},
+        "ResourceId": {
+          "Ref": "ApiGatewayResourceServicioopenid"
+        },
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        },
+        "ApiKeyRequired": false,
+        "AuthorizationType": "NONE",
+        "Integration": {
+          "IntegrationHttpMethod": "POST",
+          "Type": "AWS_PROXY",
+          "Uri": {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition"
+                },
+                ":apigateway:",
+                {
+                  "Ref": "AWS::Region"
+                },
+                ":lambda:path/2015-03-31/functions/",
+                {
+                  "Fn::GetAtt": [
+                    "ServicioUnderscoreopenidLambdaFunction",
+                    "Arn"
+                  ]
+                },
+                "/invocations"
+              ]
+            ]
+          }
+        },
+        "MethodResponses": []
+      }
+    },
+    "ApiGatewayMethodProxyVarAny": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "HttpMethod": "ANY",
+        "RequestParameters": {},
+        "ResourceId": {
+          "Ref": "ApiGatewayResourceProxyVar"
+        },
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        },
+        "ApiKeyRequired": false,
+        "AuthorizationType": "NONE",
+        "Integration": {
+          "IntegrationHttpMethod": "POST",
+          "Type": "AWS_PROXY",
+          "Uri": {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition"
+                },
+                ":apigateway:",
+                {
+                  "Ref": "AWS::Region"
+                },
+                ":lambda:path/2015-03-31/functions/",
+                {
+                  "Fn::GetAtt": [
+                    "ServicioUnderscoreopenidLambdaFunction",
+                    "Arn"
+                  ]
+                },
+                "/invocations"
+              ]
+            ]
+          }
+        },
+        "MethodResponses": []
+      }
+    },
+    "ApiGatewayDeployment1615328995245": {
       "Type": "AWS::ApiGateway::Deployment",
       "Properties": {
         "RestApiId": {
@@ -529,9 +782,13 @@
         "StageName": "dev"
       },
       "DependsOn": [
+        "ApiGatewayMethodServicioOptions",
+        "ApiGatewayMethodProxyVarOptions",
         "ApiGatewayMethodSigninPost",
         "ApiGatewayMethodSignupPost",
-        "ApiGatewayMethodServicioGet"
+        "ApiGatewayMethodServicioGet",
+        "ApiGatewayMethodServicioopenidGet",
+        "ApiGatewayMethodProxyVarAny"
       ]
     },
     "SigninLambdaPermissionApiGateway": {
@@ -614,6 +871,43 @@
         "FunctionName": {
           "Fn::GetAtt": [
             "ServicioLambdaFunction",
+            "Arn"
+          ]
+        },
+        "Action": "lambda:InvokeFunction",
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition"
+              },
+              ":execute-api:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":",
+              {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "/*/*"
+            ]
+          ]
+        }
+      }
+    },
+    "ServicioUnderscoreopenidLambdaPermissionApiGateway": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "ServicioUnderscoreopenidLambdaFunction",
             "Arn"
           ]
         },
@@ -754,7 +1048,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/crossaccountcognito/dev/1613433487101-2021-02-15T23:58:07.101Z/custom-resources.zip"
+          "S3Key": "serverless/crossaccountcognito/dev/1615329001857-2021-03-09T22:30:01.857Z/custom-resources.zip"
         },
         "FunctionName": "crossaccountcognito-dev-custom-resource-apigw-cw-role",
         "Handler": "apiGatewayCloudWatchRole/handler.handler",
@@ -825,6 +1119,13 @@
                     "cognito-idp:AdminInitiateAuth"
                   ],
                   "Resource": "arn:aws:cognito-idp:us-east-1:220228648715:userpool/us-east-1_NsKXmRvr9"
+                },
+                {
+                  "Effect": "Allow",
+                  "Action": [
+                    "cognito-idp:AdminInitiateAuth"
+                  ],
+                  "Resource": "arn:aws:cognito-idp:us-east-1:220228648715:userpool/us-east-1_yaIF6XRuN"
                 }
               ]
             }
@@ -902,6 +1203,14 @@
                     "cognito-idp:AdminCreateUser"
                   ],
                   "Resource": "arn:aws:cognito-idp:us-east-1:220228648715:userpool/us-east-1_NsKXmRvr9"
+                },
+                {
+                  "Effect": "Allow",
+                  "Action": [
+                    "cognito-idp:AdminInitiateAuth",
+                    "cognito-idp:AdminCreateUser"
+                  ],
+                  "Resource": "arn:aws:cognito-idp:us-east-1:220228648715:userpool/us-east-1_yaIF6XRuN"
                 }
               ]
             }
@@ -938,7 +1247,8 @@
         "ProviderARNs": [
           "arn:aws:cognito-idp:us-east-1:220228648715:userpool/us-east-1_NsKXmRvr9",
           "arn:aws:cognito-idp:us-east-1:323413004057:userpool/us-east-1_jCOnOGPsz",
-          "arn:aws:cognito-idp:us-east-1:409044723547:userpool/us-east-1_h6iqBsTk4"
+          "arn:aws:cognito-idp:us-east-1:409044723547:userpool/us-east-1_h6iqBsTk4",
+          "arn:aws:cognito-idp:us-east-1:220228648715:userpool/us-east-1_C3b2twHDV"
         ]
       }
     },
@@ -972,6 +1282,16 @@
         }
       }
     },
+    "CloudWatchLogsSubscriptionFilterServicioUnderscoreopenidLogGroup": {
+      "Type": "AWS::Logs::SubscriptionFilter",
+      "Properties": {
+        "DestinationArn": "arn:aws:logs:us-east-1:802587217904:destination:2NZSbkGJ39bZBtX8ww#jfpr8DsHmHR68pHYJ5#crossaccountcognito#dev",
+        "FilterPattern": "?\"REPORT RequestId: \" ?\"SERVERLESS_ENTERPRISE\"",
+        "LogGroupName": {
+          "Ref": "ServicioUnderscoreopenidLogGroup"
+        }
+      }
+    },
     "CloudWatchLogsSubscriptionFilterApiGatewayLogGroup": {
       "Type": "AWS::Logs::SubscriptionFilter",
       "Properties": {
@@ -1000,19 +1320,25 @@
     "SigninLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "SigninLambdaVersionnSUYcQRgjM1ucyHZwPdPkuABzqz6UPBihXqnwPHl0Mg"
-      }
-    },
-    "SignupLambdaFunctionQualifiedArn": {
-      "Description": "Current Lambda function version",
-      "Value": {
-        "Ref": "SignupLambdaVersionjuTew4dYnKqiGmn0PYtl7O63IBxPyYbqBQsruX2sqk"
+        "Ref": "SigninLambdaVersionNaoyUPnlqt7qDBWGGQQVh9lxT8M2U9J2VuUB6hMyAg"
       }
     },
     "ServicioLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "ServicioLambdaVersionTN49Po6mLaMIx7VDoNDEpMeS2JYpffe6bvHFbDew"
+        "Ref": "ServicioLambdaVersionaNp1DFAtqL3dPPqRrdhaSAWJN2sfrRKJ3a0qwML8QvA"
+      }
+    },
+    "SignupLambdaFunctionQualifiedArn": {
+      "Description": "Current Lambda function version",
+      "Value": {
+        "Ref": "SignupLambdaVersionTFotsuWqB5JiD7O5fRq3eDVgSsKSDeW1ybRJj6ZZDHI"
+      }
+    },
+    "ServicioUnderscoreopenidLambdaFunctionQualifiedArn": {
+      "Description": "Current Lambda function version",
+      "Value": {
+        "Ref": "ServicioUnderscoreopenidLambdaVersionN4PUBm3RclfMGEO9WeX9ovnJ0PVclT0MxDTA8YecuI8"
       }
     },
     "ServiceEndpoint": {
